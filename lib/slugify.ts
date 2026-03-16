@@ -1,12 +1,4 @@
-// lib/slugify.ts
 
-/**
- * Generate URL-friendly slug from title + ID
- * 
- * @param title - Article title (e.g., "Belajar React dari Nol!")
- * @param id - Unique ID number
- * @returns slug (e.g., "belajar-react-dari-nol-5")
- */
 export function slugify(title: string, id: number): string {
   const slug = title
     .toLowerCase()
@@ -24,12 +16,6 @@ export function slugify(title: string, id: number): string {
   return `${slug}-${id}`;
 }
 
-/**
- * Parse ID from slug
- * 
- * @param slug - Slug string (e.g., "belajar-react-5")
- * @returns ID number or null if not found
- */
 export function parseSlugId(slug: string): number | null {
   const match = slug.match(/-(\d+)$/);
   return match ? parseInt(match[1], 10) : null;

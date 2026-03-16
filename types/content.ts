@@ -8,6 +8,19 @@ export interface ChatLine {
   image?: string;
 }
 
+export type Source = {
+  title: string;
+  url: string;
+};
+
+export type Story = {
+  id: number;
+  name: string;
+  type: string;
+};
+
+// ─── 1. TIPE DATABASE FINAL (The Single Source of Truth) ───
+// Ini sama persis dengan apa yang ada di Mongoose Model kamu
 export interface Feed {
   id: number;
   slug: string;
@@ -20,10 +33,19 @@ export interface Feed {
   previewLines: ChatLine[];
   takeaway: string;
   author: string;
-  source?: { title: string; url: string };
+  source?: Source;
   storyId: number | null;
 }
 
+// ─── 2. TIPE FORM INPUT (Untuk Frontend) ───
+// Menggunakan 'Omit' untuk mengambil SEMUA properti dari 'Feed',
+// KECUALI id, slug, createdAt, lineCount, dan previewLines (karena ini tugas server).
+export type FeedFormInput = Omit<
+  Feed,
+  "id" | "slug" | "createdAt" | "lineCount" | "previewLines"
+>;
+
+// ─── 3. TIPE API RESPONSE (Pagination) ───
 export interface PaginatedFeeds {
   feeds: Feed[];
   pagination: {
