@@ -1,30 +1,33 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter, useParams } from "next/navigation";
-import { useState, useEffect } from "react";
-import type { Feed } from "@/types/content";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import { FeedFormData, FeedForm } from "@/components/admin/FeedForm";
+import { fetchFeedById, updateFeed } from "@/lib/services/feed-service";
 
 export default function EditFeedPage() {
   const router = useRouter();
   const params = useParams();
   const feedId = Number(params.id);
+  const isValidFeedId = Number.isFinite(feedId) && feedId > 0;
 
-  const [formData, setFormData] = useState<FeedFormData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState<FeedFormData | null | undefined>(
+    undefined
+  );
   const [message, setMessage] = useState("");
 
+  function flash(msg: string) {
+    setMessage(msg);
+    setTimeout(() => setMessage(""), 3000);
+  }
+
   useEffect(() => {
+    if (!isValidFeedId) return;
+
     async function loadFeed() {
       try {
-        const res = await fetch(`/api/feeds/${feedId}`);
-
-        if (!res.ok) {
-          throw new Error("Feed not found");
-        }
-
-        const feed: Feed = await res.json();
+        const feed = await fetchFeedById(feedId);
 
         setFormData({
           title: feed.title,
@@ -37,37 +40,23 @@ export default function EditFeedPage() {
         });
       } catch (error) {
         console.error("Load feed error:", error);
-        flash("❌ Gagal memuat data feed");
-      } finally {
-        setLoading(false);
+        flash("Gagal memuat data feed");
+        setFormData(null);
       }
     }
 
-    if (feedId) {
-      loadFeed();
-    }
-  }, [feedId]);
-
-  function flash(msg: string) {
-    setMessage(msg);
-    setTimeout(() => setMessage(""), 3000);
-  }
+    loadFeed();
+  }, [feedId, isValidFeedId]);
 
   async function handleSubmit(data: FeedFormData) {
     try {
-      const res = await fetch(`/api/feeds/${feedId}`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      });
+      await updateFeed(feedId, data);
 
-      if (!res.ok) throw new Error("Gagal menyimpan");
-
-      flash("✅ Feed berhasil diupdate");
+      flash("Feed berhasil diupdate");
       setTimeout(() => router.push("/admin/feeds"), 1000);
     } catch (error) {
       console.error("Submit error:", error);
-      flash("❌ Gagal menyimpan feed");
+      flash("Gagal menyimpan feed");
       throw new Error("Failed to save");
     }
   }
@@ -76,13 +65,25 @@ export default function EditFeedPage() {
     router.push("/admin/feeds");
   }
 
-  if (loading) {
+  if (!isValidFeedId) {
     return (
       <div className="flex min-h-screen items-center justify-center">
-        <div className="text-slate-500 dark:text-slate-400">Memuat...</div>
+        <div className="text-center">
+          <div className="mb-4 text-slate-500 dark:text-slate-400">
+            Feed tidak ditemukan
+          </div>
+          <Link
+            href="/admin/feeds"
+            className="text-blue-600 hover:underline dark:text-cyan-400"
+          >
+            Kembali ke Daftar Feed
+          </Link>
+        </div>
       </div>
     );
   }
+
+  if (formData === undefined) return null;
 
   if (!formData) {
     return (
@@ -95,7 +96,7 @@ export default function EditFeedPage() {
             href="/admin/feeds"
             className="text-blue-600 hover:underline dark:text-cyan-400"
           >
-            ← Kembali ke Daftar Feed
+            Kembali ke Daftar Feed
           </Link>
         </div>
       </div>
@@ -108,7 +109,7 @@ export default function EditFeedPage() {
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Feed #{feedId}</h1>
           <Link href="/admin/feeds" className="btn-secondary">
-            ← Kembali
+            Kembali
           </Link>
         </div>
 

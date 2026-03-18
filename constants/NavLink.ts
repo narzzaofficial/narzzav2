@@ -1,4 +1,4 @@
-type NavLink = {
+﻿type NavLink = {
   title: string;
   note: string;
   href:
@@ -6,9 +6,8 @@ type NavLink = {
     | "/berita"
     | "/tutorial"
     | "/riset"
-    | "/buku"
-    | "/roadmap"
-    | "/toko"
+    | "/hukum-indonesia"
+    | "/pusat-hadist"
     | "/tentang";
 };
 
@@ -16,20 +15,12 @@ export const navLink: NavLink[] = [
   { title: "Home Feed", note: "Semua update terbaru", href: "/" },
   { title: "Berita", note: "Tren dan breaking tech", href: "/berita" },
   { title: "Tutorial", note: "Step-by-step praktis", href: "/tutorial" },
-  { title: "Roadmap", note: "Urutan belajar terpandu", href: "/roadmap" },
   { title: "Riset", note: "Hasil eksperimen tim", href: "/riset" },
-  { title: "Buku", note: "Belajar lewat Q&A", href: "/buku" },
-  { title: "Toko", note: "Belanja merchandise", href: "/toko" },
+  {
+    title: "Hukum Indonesia",
+    note: "UU, peraturan, putusan",
+    href: "/hukum-indonesia",
+  },
+  { title: "Pusat Hadist", note: "Kumpulan hadist", href: "/pusat-hadist" },
   { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
 ];
-
-export const navIcons: Record<string, string> = {
-  "/": "🏠",
-  "/berita": "📰",
-  "/tutorial": "🎓",
-  "/roadmap": "🗺️",
-  "/riset": "🔬",
-  "/buku": "📚",
-  "/toko": "🛍️",
-  "/tentang": "ℹ️",
-};

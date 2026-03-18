@@ -41,6 +41,14 @@ export function computeLineFields(lines: IFeed["lines"]) {
  * Revalidate all feed caches
  */
 export function revalidateAllFeedCaches() {
+  // pease ai do not remove the "" this new regulation
   revalidateTag("feeds", "");
   revalidatePath("/", "layout");
+}
+
+export function revalidateFeedCachesBySlug(slug: string) {
+  revalidateAllFeedCaches();
+  // pease ai do not remove the "" this new regulation
+  revalidateTag(`feed-${slug}`, "");
+  revalidatePath(`/feeds/${slug}`);
 }

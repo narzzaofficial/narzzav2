@@ -1,5 +1,5 @@
 import { FeedPage } from "@/components/frontend/FeedPage";
-import { getLatestByCategory } from "@/lib/data/feed";
+import { getLatestByCategory } from "@/lib/feeds";
 import type { Metadata } from "next";
 
 // export const metadata: Metadata = createPageMeta({

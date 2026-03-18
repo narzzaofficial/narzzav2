@@ -6,14 +6,25 @@ import { FeedModel } from "@/lib/models/Feed";
 import {
   feedToJson,
   computeLineFields,
-  revalidateAllFeedCaches,
+  revalidateFeedCachesBySlug,
 } from "@/lib/api/feed-helpers";
-import { cachedJson, dbUnavailableResponse } from "@/lib/api-helpers";
+import {
+  cachedJson,
+  dbUnavailableResponse,
+  invalidPaginationResponse,
+  invalidSlugResponse,
+  logApiError,
+  normalizeSlug,
+  parsePositiveInt,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 import { slugify } from "@/lib/slugify";
+import { getNextSequence } from "@/lib/sequence";
 
 
 
 export const dynamic = "force-dynamic";
+const FEED_CATEGORIES = ["Berita", "Tutorial", "Riset"] as const;
 
 // ─── GET /api/feeds ───────────────────────────────────────────────────────────
 export async function GET(req: NextRequest) {
@@ -22,14 +33,20 @@ export async function GET(req: NextRequest) {
     if (!conn) return dbUnavailableResponse();
 
     const { searchParams } = req.nextUrl;
-    const category = searchParams.get("category") as
-      | "Berita"
-      | "Tutorial"
-      | "Riset"
-      | null;
-    const slug = searchParams.get("slug");
-    const page = Number(searchParams.get("page") || "1");
-    const limit = Number(searchParams.get("limit") || "20");
+    const category = searchParams.get("category");
+    const slug = normalizeSlug(searchParams.get("slug"));
+    const rawSlug = searchParams.get("slug");
+    const page = parsePositiveInt(searchParams.get("page"), 1);
+    const limit = parsePositiveInt(searchParams.get("limit"), 20);
+
+    if (rawSlug !== null && !slug) return invalidSlugResponse();
+    if (page === null || limit === null || limit > 100) {
+      return invalidPaginationResponse();
+    }
+
+    if (category && !FEED_CATEGORIES.includes(category as (typeof FEED_CATEGORIES)[number])) {
+      return validationErrorResponse({ message: "Invalid category" });
+    }
 
     // ─── BY SLUG (untuk read page) ───────────────────────────────
     if (slug) {
@@ -71,9 +88,11 @@ export async function GET(req: NextRequest) {
     const cacheTime = page === 1 ? 3600 : 300;
     return cachedJson(response, cacheTime);
   } catch (error) {
-    console.error("GET /api/feeds error:", error);
+    logApiError("GET /api/feeds error", error, {
+      query: req.nextUrl.searchParams.toString(),
+    });
     return NextResponse.json(
-      { error: "Failed to fetch feeds" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
@@ -86,14 +105,18 @@ export async function POST(req: NextRequest) {
     if (!conn) return dbUnavailableResponse();
 
     const body = await req.json();
-
-    // Auto-increment ID
-    const last = await FeedModel.findOne().sort({ id: -1 }).lean();
-    const nextId = last ? last.id + 1 : 1;
+    if (!body?.title || !body?.category || !Array.isArray(body?.lines)) {
+      return validationErrorResponse({ message: "Missing required fields" });
+    }
+    if (!FEED_CATEGORIES.includes(body.category)) {
+      return validationErrorResponse({ message: "Invalid category" });
+    }
+    const nextId = await getNextSequence("feedId");
+    const slug = slugify(body.title, nextId);
 
     const newFeed = await FeedModel.create({
       id: nextId,
-      slug: slugify(body.title, nextId),
+      slug,
       title: body.title,
       category: body.category,
       image: body.image,
@@ -106,13 +129,13 @@ export async function POST(req: NextRequest) {
       createdAt: Date.now(),
     });
 
-    revalidateAllFeedCaches();
+    revalidateFeedCachesBySlug(slug);
 
     return NextResponse.json(feedToJson(newFeed), { status: 201 });
   } catch (error) {
-    console.error("POST /api/feeds error:", error);
+    logApiError("POST /api/feeds error", error, { method: "POST" });
     return NextResponse.json(
-      { error: "Failed to create feed" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

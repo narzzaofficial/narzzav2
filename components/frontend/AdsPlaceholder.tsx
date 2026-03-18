@@ -16,20 +16,14 @@ const AdsPlaceholder = ({ label, size, variant = "square" }: AdsProps) => {
       : "h-[250px]";
 
   return (
-    <div className="sidebar-widget overflow-hidden">
+    <div className="overflow-hidden mb-6">
       <p
-        className="mb-2 text-[10px] font-semibold uppercase tracking-widest"
-        style={{ color: "var(--text-secondary)" }}
+        className="mb-2 text-[10px] font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500"
       >
         {label}
       </p>
       <div
-        className={`flex ${heightClass} w-full items-center justify-center rounded-xl border border-dashed text-xs`}
-        style={{
-          borderColor: "var(--surface-border)",
-          color: "var(--text-secondary)",
-          background: "var(--surface)",
-        }}
+        className={`flex ${heightClass} w-full items-center justify-center rounded-2xl border-2 border-dashed border-slate-200 dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 text-xs font-medium text-slate-400 dark:text-slate-500`}
       >
         {size}
       </div>

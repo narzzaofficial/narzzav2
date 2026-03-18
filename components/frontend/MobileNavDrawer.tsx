@@ -1,10 +1,33 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import { navLink, navIcons } from "@/constants/NavLink";
+import { navLink } from "@/constants/NavLink";
 import Image from "next/image";
+import type { LucideIcon } from "lucide-react";
+import {
+  Circle,
+  FlaskConical,
+  GraduationCap,
+  Home,
+  Info,
+  Moon,
+  Newspaper,
+  Scale,
+  ScrollText,
+  Sun,
+} from "lucide-react";
+
+const NAV_ICONS: Record<string, LucideIcon> = {
+  "/": Home,
+  "/berita": Newspaper,
+  "/tutorial": GraduationCap,
+  "/riset": FlaskConical,
+  "/hukum-indonesia": Scale,
+  "/pusat-hadist": ScrollText,
+  "/tentang": Info,
+};
 
 type MobileNavDrawerProps = {
   activePath: string;
@@ -157,7 +180,7 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
               <nav className="space-y-1">
                 {navLink.map((item) => {
                   const isActive = activePath === item.href;
-                  const icon = navIcons[item.href] ?? "•";
+                  const Icon = NAV_ICONS[item.href] ?? Circle;
 
                   return (
                     <Link
@@ -182,7 +205,7 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
                       <span
                         className={`
                           flex h-9 w-9 shrink-0 items-center justify-center 
-                          rounded-lg text-base transition-all
+                          rounded-lg transition-all
                           ${
                             isActive
                               ? "bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30"
@@ -190,7 +213,7 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
                           }
                         `}
                       >
-                        {icon}
+                        <Icon className="h-5 w-5 text-slate-900 dark:text-white" />
                       </span>
 
                       <div className="min-w-0 flex-1">
@@ -245,12 +268,12 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
             <div className="border-t border-slate-200 dark:border-slate-800 p-3">
               {!mounted ? (
                 <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-slate-800/50 px-3 py-2.5">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
-                      <span className="text-base">🌓</span>
-                    </div>
-                    <div>
-                      <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
+                      <Circle className="h-4 w-4 text-slate-500 dark:text-slate-300" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
                         Tema
                       </p>
                       <p className="text-[11px] text-slate-500">Loading...</p>
@@ -263,8 +286,12 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
                   className="group w-full flex items-center justify-between rounded-xl px-3 py-2.5 transition-all duration-150 hover:bg-slate-50 dark:hover:bg-slate-800/50"
                 >
                   <div className="flex items-center gap-3">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-base transition-all bg-slate-100 dark:bg-slate-800 group-hover:bg-slate-200 dark:group-hover:bg-slate-700">
-                      {isDark ? "🌙" : "☀️"}
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all bg-slate-100 dark:bg-slate-800 group-hover:bg-slate-200 dark:group-hover:bg-slate-700">
+                      {isDark ? (
+                        <Moon className="h-4 w-4 text-slate-700 dark:text-slate-300" />
+                      ) : (
+                        <Sun className="h-4 w-4 text-slate-700 dark:text-slate-300" />
+                      )}
                     </span>
                     <div className="text-left">
                       <p className="text-sm font-semibold leading-none text-slate-700 dark:text-slate-300">
@@ -296,3 +323,4 @@ export function MobileNavDrawer({ activePath }: MobileNavDrawerProps) {
     </>
   );
 }
+

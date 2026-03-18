@@ -11,6 +11,7 @@ type FeedPageProps = {
   badge: string;
   title: string;
   description: string;
+  showHeader?: boolean;
   category?: Feed["category"];
   initialFeeds: Feed[];
   // NOTE: Commented out untuk nanti
@@ -25,10 +26,12 @@ export function FeedPage({
   badge,
   title,
   description,
+  showHeader = true,
   category,
   initialFeeds = [],
 }: FeedPageProps) {
   const isHome = activePath === "/";
+  const shouldShowHeader = showHeader && !isHome;
 
   // Default category: Semua untuk home, Berita untuk lainnya
   const [activeCategory, setActiveCategory] = useState<HomeCategory>(
@@ -63,24 +66,21 @@ export function FeedPage({
   return (
     <>
       {/* Page Header */}
-      <section className="page-hero">
-        <div>
-          <p className="text-xs uppercase tracking-[0.24em] text-cyan-300 dark:text-cyan-300">
-            {badge}
-          </p>
-          <h1 className="mt-2 text-2xl font-bold md:text-3xl">{title}</h1>
-          <p className="mt-2 max-w-xl text-sm text-slate-600 dark:text-slate-300">
-            {description}
-          </p>
-        </div>
-
-        {/* NOTE: Status Viral Section - implement nanti */}
-        {/* {isHome && showStories && initialStories.length > 0 && (
-          <div className="hidden lg:block mt-4">
-            <StatusViralSection stories={initialStories} feeds={initialFeeds} />
+      {shouldShowHeader && (
+        <section className="glass-panel mb-6 p-6">
+          <div>
+            <p className="text-[10px] uppercase font-bold tracking-[0.24em] text-sky-400 dark:text-sky-300">
+              {badge}
+            </p>
+            <h1 className="mt-2 text-3xl font-bold text-slate-900 dark:text-white md:text-3xl">
+              {title}
+            </h1>
+            <p className="mt-2 max-w-xl text-sm text-slate-500 dark:text-slate-400">
+              {description}
+            </p>
           </div>
-        )} */}
-      </section>
+        </section>
+      )}
 
       {/* NOTE: Mobile Status + Global Search - implement nanti */}
       {/* {isHome && (
@@ -126,7 +126,9 @@ function FeedList({ feeds, isTutorialLayout, emptyMessage }: FeedListProps) {
   return (
     <section
       className={`mt-4 grid ${
-        isTutorialLayout ? "gap-4" : "grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4"
+        isTutorialLayout
+          ? "grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
+          : "grid-cols-2 gap-3 sm:grid-cols-1 sm:gap-4"
       }`}
     >
       {feeds.map((feed, index) =>

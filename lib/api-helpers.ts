@@ -34,6 +34,49 @@ export function invalidIdResponse(): NextResponse<ErrorResponse> {
   );
 }
 
+export function invalidSlugResponse(): NextResponse<ErrorResponse> {
+  return NextResponse.json(
+    { error: "Invalid slug" },
+    { status: 400 }
+  );
+}
+
+export function invalidPaginationResponse(): NextResponse<ErrorResponse> {
+  return NextResponse.json(
+    { error: "Invalid pagination params" },
+    { status: 400 }
+  );
+}
+
+export function parsePositiveInt(
+  value: string | null,
+  fallback: number
+): number | null {
+  if (value === null || value.trim() === "") return fallback;
+  const parsed = Number(value);
+  if (!Number.isInteger(parsed) || parsed < 1) return null;
+  return parsed;
+}
+
+export function normalizeSlug(value: string | null): string | null {
+  if (value === null) return null;
+  const slug = value.trim();
+  if (!slug) return null;
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return null;
+  return slug;
+}
+
+export function logApiError(
+  operation: string,
+  error: unknown,
+  context?: Record<string, unknown>
+) {
+  console.error(operation, {
+    error,
+    ...(context ?? {}),
+  });
+}
+
 /**
  * Validation error response (400)
  */

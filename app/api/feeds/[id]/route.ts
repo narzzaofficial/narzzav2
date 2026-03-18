@@ -6,9 +6,14 @@ import { FeedModel } from "@/lib/models/Feed";
 import {
   feedToJson,
   computeLineFields,
-  revalidateAllFeedCaches,
+  revalidateFeedCachesBySlug,
 } from "@/lib/api/feed-helpers";
-import { dbUnavailableResponse, invalidIdResponse } from "@/lib/api-helpers";
+import {
+  dbUnavailableResponse,
+  invalidIdResponse,
+  logApiError,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +26,7 @@ export async function GET(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) return invalidIdResponse();
+    if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();
 
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
@@ -33,9 +38,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
     return NextResponse.json(feedToJson(feed));
   } catch (error) {
-    console.error("GET /api/feeds/[id] error:", error);
+    logApiError("GET /api/feeds/[id] error", error);
     return NextResponse.json(
-      { error: "Failed to fetch feed" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
@@ -46,12 +51,19 @@ export async function PUT(req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) return invalidIdResponse();
+    if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();
 
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 
     const body = await req.json();
+    if (!body || typeof body !== "object") {
+      return validationErrorResponse({ message: "Invalid request body" });
+    }
+    const existing = await FeedModel.findOne({ id: feedId }).lean();
+    if (!existing) {
+      return NextResponse.json({ error: "Feed not found" }, { status: 404 });
+    }
 
     const updateData = {
       ...body,
@@ -69,13 +81,16 @@ export async function PUT(req: NextRequest, context: RouteContext) {
       return NextResponse.json({ error: "Feed not found" }, { status: 404 });
     }
 
-    revalidateAllFeedCaches();
+    revalidateFeedCachesBySlug(result.slug);
+    if (existing.slug !== result.slug) {
+      revalidateFeedCachesBySlug(existing.slug);
+    }
 
     return NextResponse.json(feedToJson(result));
   } catch (error) {
-    console.error("PUT /api/feeds/[id] error:", error);
+    logApiError("PUT /api/feeds/[id] error", error, { method: "PUT" });
     return NextResponse.json(
-      { error: "Failed to update feed" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }
@@ -86,7 +101,7 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
     const { id } = await context.params;
     const feedId = Number(id);
-    if (Number.isNaN(feedId)) return invalidIdResponse();
+    if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();
 
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
@@ -98,13 +113,13 @@ export async function DELETE(_req: NextRequest, context: RouteContext) {
 
     await FeedModel.deleteOne({ id: feedId });
 
-    revalidateAllFeedCaches();
+    revalidateFeedCachesBySlug(feed.slug);
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("DELETE /api/feeds/[id] error:", error);
+    logApiError("DELETE /api/feeds/[id] error", error, { method: "DELETE" });
     return NextResponse.json(
-      { error: "Failed to delete feed" },
+      { error: "Internal Server Error" },
       { status: 500 }
     );
   }

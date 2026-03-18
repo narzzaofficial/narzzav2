@@ -72,7 +72,9 @@ export async function connectDB(): Promise<typeof mongoose | null> {
     cached.promise = mongoose
       .connect(MONGODB_URI, connectionOptions)
       .then((mongooseInstance) => {
-        console.log("✅ MongoDB connected successfully");
+        if (process.env.NODE_ENV === "development") {
+          console.log("Mongo connected");
+        }
         return mongooseInstance;
       })
       .catch((error) => {

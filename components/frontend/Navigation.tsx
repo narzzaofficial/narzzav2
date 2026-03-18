@@ -1,11 +1,34 @@
-"use client";
+﻿"use client";
 
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
-import { navLink, navIcons } from "@/constants/NavLink";
+import { navLink } from "@/constants/NavLink";
 import Image from "next/image";
+import type { LucideIcon } from "lucide-react";
+import {
+  Circle,
+  FlaskConical,
+  GraduationCap,
+  Home,
+  Info,
+  Moon,
+  Newspaper,
+  Scale,
+  ScrollText,
+  Sun,
+} from "lucide-react";
+
+const NAV_ICONS: Record<string, LucideIcon> = {
+  "/": Home,
+  "/berita": Newspaper,
+  "/tutorial": GraduationCap,
+  "/riset": FlaskConical,
+  "/hukum-indonesia": Scale,
+  "/pusat-hadist": ScrollText,
+  "/tentang": Info,
+};
 
 export function Navigation() {
   const activePath = usePathname();
@@ -21,35 +44,35 @@ export function Navigation() {
   return (
     <div className="flex flex-col gap-4">
       {/* Logo Card */}
-      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 shadow-sm">
+      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-white/80 dark:border-slate-800 p-5 shadow-sm">
         <div className="flex items-center gap-3">
           {/* Only render logo after mounted to avoid hydration mismatch */}
           {mounted ? (
             <Image
               src={isDark ? "/dark-logo.png" : "/logo.png"}
               alt="Narzza Logo"
-              width={48}
-              height={48}
-              className="w-12 h-12 object-contain"
+              width={40}
+              height={40}
+              className="w-10 h-10 object-contain"
             />
           ) : (
-            <div className="w-12 h-12 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
+            <div className="w-10 h-10 bg-slate-100 dark:bg-slate-800 rounded-lg animate-pulse" />
           )}
           <div className="leading-tight">
-            <p className="text-lg font-semibold text-slate-900 dark:text-white">Narzza</p>
-            <p className="text-xs text-slate-500 dark:text-slate-400">Media Digital</p>
+            <p className="text-xl font-bold text-slate-900 dark:text-white">Narzza</p>
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">Media Digital</p>
           </div>
         </div>
       </div>
 
       {/* Navigation Card */}
-      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-3 shadow-sm overflow-hidden">
+      <div className="rounded-2xl bg-white dark:bg-slate-900 border border-white/80 dark:border-slate-800 p-3 shadow-sm overflow-hidden">
         <div className="max-h-[calc(100vh-180px)] overflow-y-auto scrollbar-hide">
           {/* Navigation Links */}
           <nav className="space-y-1">
             {navLink.map((item) => {
               const isActive = activePath === item.href;
-              const icon = navIcons[item.href] ?? "•";
+              const Icon = NAV_ICONS[item.href] ?? Circle;
 
               return (
                 <Link
@@ -75,7 +98,7 @@ export function Navigation() {
                   <span
                     className={`
                       flex h-9 w-9 shrink-0 items-center justify-center 
-                      rounded-lg text-base transition-all
+                      rounded-lg transition-all
                       ${
                         isActive
                           ? "bg-gradient-to-br from-cyan-400 to-blue-500 shadow-lg shadow-cyan-500/30"
@@ -83,7 +106,7 @@ export function Navigation() {
                       }
                     `}
                   >
-                    {icon}
+                    <Icon className="h-5 w-5 text-slate-900 dark:text-white" />
                   </span>
 
                   {/* Text */}
@@ -143,7 +166,7 @@ export function Navigation() {
             <div className="flex items-center justify-between rounded-xl bg-slate-50 dark:bg-slate-800/50 px-3 py-2.5">
               <div className="flex items-center gap-3">
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-700">
-                  <span className="text-base">🌓</span>
+                  <Circle className="h-4 w-4 text-slate-500 dark:text-slate-300" />
                 </div>
                 <div>
                   <p className="text-sm font-semibold text-slate-700 dark:text-slate-300">
@@ -154,55 +177,55 @@ export function Navigation() {
               </div>
             </div>
           ) : (
-            <button
-              onClick={() => setTheme(isDark ? "light" : "dark")}
+            <div
               className="
                 group w-full flex items-center justify-between
-                rounded-xl px-3 py-2.5
+                rounded-xl px-4 py-3
                 transition-all duration-150
-                hover:bg-slate-50 dark:hover:bg-slate-800/50
+                bg-sky-50/50 dark:bg-slate-800/50
               "
             >
               <div className="flex items-center gap-3">
                 <span
                   className="
-                    flex h-9 w-9 shrink-0 items-center justify-center 
-                    rounded-lg text-base transition-all
-                    bg-slate-100 dark:bg-slate-800 
-                    group-hover:bg-slate-200 dark:group-hover:bg-slate-700
+                    flex h-5 w-5 shrink-0 items-center justify-center 
+                    transition-all
                   "
                 >
-                  {isDark ? "🌙" : "☀️"}
+                  {isDark ? (
+                    <Moon className="h-4 w-4 text-slate-700 dark:text-slate-300" />
+                  ) : (
+                    <Sun className="h-4 w-4 text-slate-700 dark:text-slate-300" />
+                  )}
                 </span>
                 <div className="text-left">
                   <p className="text-sm font-semibold leading-none text-slate-700 dark:text-slate-300">
-                    {isDark ? "Light Mode" : "Dark Mode"}
-                  </p>
-                  <p className="mt-1 text-[11px] leading-none text-slate-500">
-                    {isDark ? "Beralih ke terang" : "Beralih ke gelap"}
+                    Dark Mode
                   </p>
                 </div>
               </div>
 
               {/* Toggle Switch */}
-              <div
+              <button
+                onClick={() => setTheme(isDark ? "light" : "dark")}
                 className={`
-                  relative h-6 w-11 rounded-full transition-colors
+                  relative h-5 w-10 rounded-full transition-colors focus:outline-none
                   ${isDark ? "bg-cyan-500" : "bg-slate-300"}
                 `}
               >
                 <div
                   className={`
-                    absolute top-0.5 h-5 w-5 rounded-full bg-white shadow-sm
+                    absolute top-0.5 h-4 w-4 rounded-full bg-white shadow-sm
                     transition-transform duration-200
-                    ${isDark ? "translate-x-5" : "translate-x-0.5"}
+                    ${isDark ? "translate-x-5" : "translate-x-1"}
                   `}
                 />
-              </div>
-            </button>
+              </button>
+            </div>
           )}
         </div>
       </div>
     </div>
   );
 }
+

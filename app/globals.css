@@ -11,17 +11,78 @@
 
 /* ─── KOMPONEN REUSABLE (Dapat Dipakai Ulang) ─── */
 @layer components {
+  .read-container {
+    @apply mx-auto w-full max-w-3xl px-4 py-6;
+  }
+
+  .read-card {
+    @apply overflow-hidden rounded-3xl border border-slate-300/70 bg-white/92 shadow-lg shadow-slate-400/18 dark:border-slate-700/50 dark:bg-slate-900/70 dark:shadow-none;
+  }
+
+  .read-title {
+    @apply text-2xl font-bold leading-tight text-slate-900 dark:text-slate-100 md:text-3xl;
+  }
+
+  .read-content {
+    @apply text-sm leading-relaxed text-slate-700 dark:text-slate-200;
+  }
+
+  .read-meta {
+    @apply text-sm text-slate-500 dark:text-slate-400;
+  }
+
+  .empty-state {
+    @apply rounded-2xl border border-slate-200 bg-white/70 px-4 py-5 text-center text-sm text-slate-600 dark:border-slate-700/50 dark:bg-slate-900/40 dark:text-slate-300;
+  }
+
+  .no-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
   /* ═══════════════════════════════════════════════════════════════
      BACKGROUND CANVAS - Global background untuk semua pages
      ═══════════════════════════════════════════════════════════════ */
   .bg-canvas {
-    /* LIGHT MODE: Gradient biru muda seperti screenshot */
-    @apply bg-gradient-to-br from-blue-50 via-blue-50/80 to-sky-50;
+    position: relative;
+    isolation: isolate;
+    background-color: #dbe8f2;
+    background-image:
+      radial-gradient(58rem 44rem at -14% 6%, rgba(56, 189, 248, 0.22), transparent 72%),
+      radial-gradient(42rem 34rem at 106% 18%, rgba(16, 185, 129, 0.1), transparent 68%),
+      radial-gradient(66rem 42rem at 50% 118%, rgba(59, 130, 246, 0.1), transparent 76%),
+      linear-gradient(180deg, #e7f1f8 0%, #d9e7f3 52%, #d4e3f0 100%);
     @apply text-slate-900;
+  }
 
-    /* DARK MODE: Gradient gelap dengan accent */
-    @apply dark:bg-gradient-to-br dark:from-slate-950 dark:via-slate-900 dark:to-slate-950;
-    @apply dark:text-slate-100;
+  .bg-canvas::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 220ms ease;
+    background:
+      radial-gradient(64rem 44rem at -12% -8%, rgba(16, 185, 129, 0.3), transparent 74%),
+      radial-gradient(58rem 42rem at 112% -6%, rgba(249, 115, 22, 0.26), transparent 72%),
+      radial-gradient(56rem 36rem at 50% 50%, rgba(30, 64, 175, 0.24), transparent 78%),
+      radial-gradient(44rem 34rem at 50% 114%, rgba(14, 165, 233, 0.18), transparent 74%),
+      linear-gradient(180deg, #041028 0%, #020b1f 48%, #020817 100%);
+  }
+
+  .dark .bg-canvas {
+    background-color: #020817;
+    background-image:
+      radial-gradient(76rem 52rem at 50% 46%, rgba(7, 26, 56, 0.88), rgba(2, 8, 23, 0.96) 66%),
+      linear-gradient(180deg, #07132d 0%, #040d22 42%, #020817 100%);
+    @apply text-slate-100;
+  }
+
+  .dark .bg-canvas::before {
+    opacity: 1;
   }
 
   /* ═══════════════════════════════════════════════════════════════
@@ -98,8 +159,8 @@
     @apply rounded-2xl border backdrop-blur-[16px] p-5 shadow-sm transition-all duration-200;
 
     /* LIGHT MODE */
-    @apply bg-white/95 border-slate-200 text-slate-900;
-    @apply shadow-lg shadow-slate-200/50;
+    @apply bg-white/92 border-slate-300/70 text-slate-900;
+    @apply shadow-lg shadow-slate-400/18;
 
     /* DARK MODE */
     @apply dark:bg-slate-900/70 dark:border-slate-700/50 dark:text-slate-100;
@@ -110,7 +171,7 @@
     @apply rounded-xl border p-4 shadow-sm transition-all;
 
     /* LIGHT MODE */
-    @apply bg-slate-50 border-slate-200;
+    @apply bg-slate-100/80 border-slate-300/70;
 
     /* DARK MODE */
     @apply dark:bg-slate-800/20 dark:border-slate-700/40;

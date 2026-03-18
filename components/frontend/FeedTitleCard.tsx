@@ -40,8 +40,8 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
 
   return (
     <Link
-      href={`/read/${feed.slug}`}
-      className={`feed-card group ${config.accent}`}
+      href={`/feeds/${feed.slug}`}
+      className={`group relative overflow-hidden rounded-2xl bg-white dark:bg-slate-900 border border-white/80 dark:border-slate-800 p-0 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg ${config.accent}`}
       style={{ animationDelay: `${index * 110}ms` }}
     >
       {/* ═══════════════════════════════════════════════════════
@@ -69,7 +69,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
 
         {/* Content */}
         <div className="flex flex-1 flex-col p-2.5">
-          <h2 className="line-clamp-2 text-xs font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-200">
+          <h2 className="break-words text-xs font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-200">
             {feed.title}
           </h2>
 
@@ -94,9 +94,9 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
           <div>
             <div className="mb-2.5 flex items-center gap-2">
               <span
-                className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-xs font-bold ${config.badge}`}
+                className={`inline-flex items-center gap-1.5 rounded-md border px-2 py-0.5 text-[10px] font-bold ${config.badge}`}
               >
-                <span className="text-sm" aria-hidden="true">
+                <span className="text-xs" aria-hidden="true">
                   {config.icon}
                 </span>
                 {feed.category}
@@ -104,7 +104,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
 
               <span className="text-slate-400 dark:text-slate-600">•</span>
 
-              <div className="flex items-center gap-1 text-xs text-slate-500 dark:text-slate-400">
+              <div className="flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400">
                 <svg
                   className="h-3 w-3"
                   fill="none"
@@ -124,15 +124,15 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
             </div>
 
             {/* Title */}
-            <h2 className="mb-3 line-clamp-2 text-base font-bold leading-tight transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-300 md:text-lg">
+            <h2 className="mb-2 break-words text-sm font-bold leading-tight transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-300 md:text-base">
               {feed.title}
             </h2>
 
             {/* Inti Cepat Box */}
-            <div className="inti-cepat-box">
-              <div className="mb-1.5 flex items-center gap-1.5">
+            <div className="rounded-xl border border-blue-100 bg-blue-50/50 dark:bg-slate-800/40 dark:border-slate-700/50 p-3 shadow-sm">
+              <div className="mb-1 flex items-center gap-1">
                 <svg
-                  className="h-3.5 w-3.5 text-blue-600 dark:text-cyan-400"
+                  className="h-3 w-3 text-blue-600 dark:text-cyan-400"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -145,11 +145,11 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
                     d="M13 10V3L4 14h7v7l9-11h-7z"
                   />
                 </svg>
-                <span className="text-xs font-semibold text-blue-700 dark:text-cyan-300">
+                <span className="text-[10px] font-bold text-blue-700 dark:text-cyan-300">
                   Inti Cepat
                 </span>
               </div>
-              <p className="line-clamp-2 text-sm leading-relaxed">
+              <p className="line-clamp-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300 font-medium">
                 {feed.takeaway}
               </p>
             </div>
@@ -192,13 +192,13 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
         </div>
 
         {/* Image Thumbnail */}
-        <div className="relative h-32 w-32 shrink-0 self-center overflow-hidden rounded-lg bg-slate-100 shadow-md dark:bg-slate-800/40 md:h-36 md:w-36">
+        <div className="relative h-28 w-28 shrink-0 self-center overflow-hidden rounded-lg bg-slate-100 shadow-md dark:bg-slate-800/40 md:h-32 md:w-32">
           <Image
             src={feed.image}
             alt={feed.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
-            sizes="(max-width: 768px) 128px, 144px"
+            sizes="(max-width: 768px) 112px, 128px"
             priority={index === 0}
           />
         </div>

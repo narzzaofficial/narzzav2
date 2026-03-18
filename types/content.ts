@@ -56,3 +56,59 @@ export interface PaginatedFeeds {
     hasMore: boolean;
   };
 }
+
+export interface FeedComment {
+  id: string;
+  feedId: number;
+  feedSlug: string;
+  name: string;
+  message: string;
+  createdAt: number;
+}
+
+export type HukumCategory =
+  | "Pidana"
+  | "Perdata"
+  | "Ketenagakerjaan"
+  | "Bisnis"
+  | "Pajak"
+  | "Pertanahan"
+  | "Keluarga"
+  | "Konsumen"
+  | "Siber"
+  | "LaluLintas";
+
+export interface LawSource {
+  institution: string;
+  originalUrl: string;
+  pdfUrl?: string;
+}
+
+export interface LawDoc {
+  id: number;
+  slug: string;
+  title: string;
+  category: HukumCategory;
+  summary: string;
+  originalText: string;
+  explanationLines: ChatLine[];
+  number: string;
+  year: number;
+  enactedAt: number;
+  promulgatedAt: number;
+  effectiveAt?: number;
+  status: "Berlaku" | "Diubah" | "Dicabut";
+  source: LawSource;
+  createdAt: number;
+}
+
+export interface PaginatedLawDocs {
+  items: LawDoc[];
+  pagination: {
+    page: number;
+    limit: number;
+    total: number;
+    totalPages: number;
+    hasMore: boolean;
+  };
+}

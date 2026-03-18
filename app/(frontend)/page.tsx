@@ -1,65 +1,122 @@
-"use client";
+import { FeedPage } from "@/components/frontend/FeedPage";
+import {
+  StatusViralSection,
+  type StatusFeedItem,
+  type StatusStory,
+} from "@/components/status-bubble";
+import { getLatestByCategory } from "@/lib/feeds";
+import type { Metadata } from "next";
 
-import { useTheme } from "next-themes";
-import React, { useEffect, useState } from "react";
+// export const metadata: Metadata = createPageMeta({
+//   title: "Berita, Tutorial & Riset",
+//   description:
+//     "Platform media digital yang menyajikan informasi dari berbagai bidang dalam format interaktif dan mudah dipahami. Baca topik panjang jadi santai.",
+//   path: "/",
+// });
 
-const Page = () => {
-  // Ambil fungsi tema dari next-themes
-  const { theme, setTheme } = useTheme();
+export default async function HomePage() {
+  // Fetch 10 latest from each category
+  const [berita, tutorial, riset] = await Promise.all([
+    getLatestByCategory("Berita", 10),
+    getLatestByCategory("Tutorial", 10),
+    getLatestByCategory("Riset", 10),
+  ]);
 
-  // State untuk mencegah hydration error
-  const [mounted, setMounted] = useState(false);
+  // Combine and sort by createdAt (newest first)
+  const allFeeds = [...berita, ...tutorial, ...riset].sort(
+    (a, b) => b.createdAt - a.createdAt
+  );
 
-  useEffect(() => {
-    // eslint-disable-next-line
-    setMounted(true);
-  }, []);
+  const paletteByCategory: Record<string, string> = {
+    Berita: "from-sky-500 to-cyan-500",
+    Tutorial: "from-emerald-500 to-teal-500",
+    Riset: "from-indigo-500 to-violet-500",
+  };
+
+  const statusFeeds: StatusFeedItem[] = allFeeds
+    .filter((feed) => feed.storyId !== null)
+    .map((feed) => ({
+      id: feed.id,
+      slug: feed.slug,
+      title: feed.title,
+      image: feed.image,
+      takeaway: feed.takeaway,
+      category: feed.category,
+      storyId: feed.storyId,
+    }));
+
+  const grouped = new Map<number, StatusFeedItem[]>();
+  for (const feed of statusFeeds) {
+    if (feed.storyId === null) continue;
+    const list = grouped.get(feed.storyId) ?? [];
+    list.push(feed);
+    grouped.set(feed.storyId, list);
+  }
+
+  const stories: StatusStory[] = Array.from(grouped.entries())
+    .map(([storyId, items], index) => {
+      const top = items[0];
+      return {
+        id: storyId,
+        name: `Story ${storyId}`,
+        label: `S${storyId}`,
+        type: top.category,
+        palette:
+          paletteByCategory[top.category] || "from-sky-500 to-cyan-500",
+        image: top.image,
+        viral: index < 3,
+      };
+    })
+    .sort((a, b) => a.id - b.id);
+
+  // Fallback sementara kalau belum ada feed yang di-assign storyId
+  const fallbackFeeds: StatusFeedItem[] = allFeeds.slice(0, 6).map((feed) => ({
+    id: feed.id,
+    slug: feed.slug,
+    title: feed.title,
+    image: feed.image,
+    takeaway: feed.takeaway,
+    category: feed.category,
+    storyId: feed.id,
+  }));
+
+  const fallbackStories: StatusStory[] = fallbackFeeds.map((feed, index) => {
+
+    const baseName = feed.title.trim();
+    const shortName =
+      baseName.length > 16 ? `${baseName.slice(0, 16).trim()}...` : baseName;
+    const label = baseName.slice(0, 2).toUpperCase();
+
+    return {
+      id: feed.storyId ?? feed.id,
+      name: shortName,
+      label: label || feed.category.slice(0, 2).toUpperCase(),
+      type: feed.category,
+      palette: paletteByCategory[feed.category] || "from-sky-500 to-cyan-500",
+      image: feed.image,
+      viral: index < 3,
+    };
+  });
+
+  const displayStories = stories.length > 0 ? stories : fallbackStories;
+  const displayFeeds = stories.length > 0 ? statusFeeds : fallbackFeeds;
 
   return (
-    // Wrapper utama: min-h-screen memastikan background penuh layar
-    <div className="min-h-screen p-6 transition-colors duration-300 md:p-12">
-      {/* Header & Tombol Toggle */}
-      <div className="mb-10 flex items-center justify-between rounded-2xl border border-slate-200 bg-white/50 p-4 shadow-sm backdrop-blur-md dark:border-slate-800 dark:bg-slate-900/50">
-        <h1 className="text-xl font-extrabold text-slate-900 dark:text-white">
-          Eksperimen UI NardiLabs
-        </h1>
+    <>
+      <section className="glass-panel -mx-2 rounded-xl p-2 sm:mx-0 sm:rounded-2xl sm:p-5">
+        <StatusViralSection stories={displayStories} feeds={displayFeeds} standalone />
+      </section>
 
-        {/* Tombol hanya di-render setelah client siap */}
-        {mounted && (
-          <button
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-            className="flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition-all hover:bg-slate-100 hover:shadow-md active:scale-95 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
-          >
-            {theme === "dark" ? "☀️ Mode Terang" : "🌙 Mode Gelap"}
-          </button>
-        )}
+      <div className="mt-6">
+        <FeedPage
+          activePath="/"
+          showHeader={false}
+          badge="Narzza Media Digital"
+          title="Berita, tutorial, dan eksperimen dalam format chat"
+          description="Baca topik panjang jadi lebih santai: pertanyaan singkat, jawaban padat, dan inti cepat per konten."
+          initialFeeds={allFeeds}
+        />
       </div>
-
-      {/* Grid untuk menjejerkan komponen yang mau di-test */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {/* Komponen 1: Feed Card */}
-        <div className="feed-card group">
-          <h3 className="text-lg font-bold">Belajar Next.js dan Tailwind</h3>
-          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
-            Testing transisi warna pada text deskripsi saat tema diubah.
-          </p>
-          <div className="mt-4 flex gap-2">
-            <span className="tag-pill">Tutorial</span>
-            <span className="tag-pill">Web Dev</span>
-          </div>
-        </div>
-
-        {/* Komponen 2: Glass Panel */}
-        <aside className="glass-panel">
-          <h2 className="mb-4 text-xl font-bold">Kategori Populer</h2>
-          <div className="inti-cepat-box">
-            Paling banyak dicari minggu ini! Perhatikan gradasi warnanya
-            berubah.
-          </div>
-        </aside>
-      </div>
-    </div>
+    </>
   );
-};
-
-export default Page;
+}
