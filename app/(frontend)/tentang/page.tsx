@@ -8,11 +8,26 @@ import {
   Layers3,
   Target,
 } from "lucide-react";
+import { absoluteUrl } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Tentang Narzza",
   description:
     "Profil singkat Narzza sebagai media digital yang membungkus informasi, edukasi, dan insight dalam format yang lebih mudah dipahami.",
+  alternates: {
+    canonical: "/tentang",
+  },
+  openGraph: {
+    title: "Tentang Narzza",
+    description:
+      "Profil singkat Narzza sebagai media digital yang membungkus informasi, edukasi, dan insight dalam format yang lebih mudah dipahami.",
+    url: "/tentang",
+  },
+  twitter: {
+    title: "Tentang Narzza",
+    description:
+      "Profil singkat Narzza sebagai media digital yang membungkus informasi, edukasi, dan insight dalam format yang lebih mudah dipahami.",
+  },
 };
 
 const valueCards = [
@@ -86,6 +101,19 @@ const collaborationItems = [
 export default function TentangPage() {
   return (
     <section className="space-y-7 md:space-y-9">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            name: "Tentang Narzza",
+            description:
+              "Profil singkat Narzza sebagai media digital yang membungkus informasi, edukasi, dan insight dalam format yang lebih mudah dipahami.",
+            url: absoluteUrl("/tentang"),
+          }),
+        }}
+      />
       <header className="glass-panel overflow-hidden">
         <div className="relative">
           <div className="absolute -right-10 -top-10 h-36 w-36 rounded-full bg-sky-200/45 blur-3xl dark:bg-cyan-400/10" />

@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { AgreeAppCard } from "@/components/agree/AgreeAppCard";
+import { absoluteUrl } from "@/lib/site";
 import { getAgreeCompanyPageData, getAllAgreeDocumentPaths } from "@/lib/setelah-klik-agree";
 
 export const revalidate = 3600;
@@ -18,11 +20,23 @@ export async function generateStaticParams() {
   ).map(({ topic, company }) => ({ topic, company }));
 }
 
-export async function generateMetadata({ params }: CompanyPageProps) {
+export async function generateMetadata({ params }: CompanyPageProps): Promise<Metadata> {
   const { topic, company } = await params;
   const data = await getAgreeCompanyPageData(topic, company);
   return data
-    ? { title: `${data.name} - Setelah Klik Agree`, description: data.description }
+    ? {
+        title: `${data.name} - Setelah Klik Agree`,
+        description: data.description,
+        alternates: {
+          canonical: `/setelah-klik-agree/${data.topicData.slug}/${data.slug}`,
+        },
+        openGraph: {
+          title: `${data.name} - Setelah Klik Agree`,
+          description: data.description,
+          url: `/setelah-klik-agree/${data.topicData.slug}/${data.slug}`,
+          type: "website",
+        },
+      }
     : { title: "Company Tidak Ditemukan" };
 }
 
@@ -36,6 +50,18 @@ export default async function AgreeCompanyPage({ params }: CompanyPageProps) {
 
   return (
     <section className="space-y-5">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: data.name,
+            description: data.description,
+            url: absoluteUrl(`/setelah-klik-agree/${data.topicData.slug}/${data.slug}`),
+          }),
+        }}
+      />
       <header className="rounded-[32px] border border-slate-300/70 bg-white/90 p-6 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/70">
         <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-sky-500 dark:text-sky-300">
           Company

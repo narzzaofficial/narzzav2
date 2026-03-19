@@ -6,6 +6,7 @@ import { RelativeTime } from "@/components/frontend/RelativeTime";
 import { LawMarkdown } from "@/components/hukum/LawMarkdown";
 import { ReadDetailToolbar } from "@/components/reads/read-detail-toolbar";
 import { getAllLaws, getLawBySlug } from "@/lib/laws";
+import { absoluteUrl } from "@/lib/site";
 
 export const dynamic = "force-static";
 export const revalidate = 3600;
@@ -53,6 +54,11 @@ export async function generateMetadata({
       url: `/hukum/${law.slug}`,
       type: "article",
     },
+    twitter: {
+      card: "summary_large_image",
+      title: `${law.number}/${law.year} - ${law.title}`,
+      description: law.summary || law.title,
+    },
   };
 }
 
@@ -64,8 +70,27 @@ export default async function LawDetailPage({ params }: LawDetailPageProps) {
     return <div>Content not found</div>;
   }
 
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: law.title,
+    description: law.summary || law.title,
+    datePublished: new Date(law.createdAt).toISOString(),
+    dateModified: new Date(law.createdAt).toISOString(),
+    mainEntityOfPage: absoluteUrl(`/hukum/${law.slug}`),
+    publisher: {
+      "@type": "Organization",
+      name: "Narzza Media Digital",
+    },
+    about: law.category,
+  };
+
   return (
     <article className="mx-auto w-full max-w-[960px] space-y-4">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
       <ReadDetailToolbar
         category={law.category}
         slug={law.slug}

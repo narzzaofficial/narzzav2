@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   BadgeDollarSign,
   BriefcaseBusiness,
@@ -17,6 +18,28 @@ import { HUKUM_CATEGORIES } from "@/lib/law-categories";
 import type { HukumCategory } from "@/types/content";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "Hukum Indonesia",
+  description:
+    "Kategori dokumen hukum Indonesia yang dirangkum agar lebih mudah dipahami dan dijelajahi.",
+  alternates: {
+    canonical: "/hukum-indonesia",
+  },
+  openGraph: {
+    title: "Hukum Indonesia",
+    description:
+      "Kategori dokumen hukum Indonesia yang dirangkum agar lebih mudah dipahami dan dijelajahi.",
+    url: "/hukum-indonesia",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Hukum Indonesia",
+    description:
+      "Kategori dokumen hukum Indonesia yang dirangkum agar lebih mudah dipahami dan dijelajahi.",
+  },
+};
 
 const categoryIcons: Record<HukumCategory, ComponentType<{ className?: string }>> = {
   Pidana: ShieldAlert,

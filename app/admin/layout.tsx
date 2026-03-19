@@ -7,5 +7,9 @@ type AdminLayoutProps = {
 };
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
-  return <div className="min-h-screen bg-canvas">{children}</div>;
+  return (
+    <main id="main-content" className="min-h-screen bg-canvas">
+      {children}
+    </main>
+  );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 function shouldHandleAnchor(anchor: HTMLAnchorElement) {
@@ -29,7 +29,6 @@ function shouldHandleAnchor(anchor: HTMLAnchorElement) {
 
 export function RouteProgress() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const [visible, setVisible] = useState(false);
   const [progress, setProgress] = useState(0);
 
@@ -78,7 +77,7 @@ export function RouteProgress() {
 
   useEffect(() => {
     finishProgress();
-  }, [pathname, searchParams]);
+  }, [pathname]);
 
   useEffect(() => {
     function handleClick(event: MouseEvent) {

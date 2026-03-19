@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
 import { HukumCategoryBrowser } from "@/components/frontend/HukumCategoryBrowser";
 import { getLawsByCategory } from "@/lib/laws";
@@ -13,6 +14,32 @@ type CategoryPageProps = {
 
 export function generateStaticParams() {
   return HUKUM_CATEGORIES.map((category) => ({ category }));
+}
+
+export async function generateMetadata({
+  params,
+}: CategoryPageProps): Promise<Metadata> {
+  const { category } = await params;
+
+  if (!isHukumCategory(category)) {
+    return {
+      title: "Kategori Hukum Tidak Ditemukan",
+    };
+  }
+
+  return {
+    title: `${category} - Hukum Indonesia`,
+    description: `Jelajahi dokumen hukum kategori ${category} yang diringkas agar lebih mudah dibaca.`,
+    alternates: {
+      canonical: `/hukum-indonesia/${category}`,
+    },
+    openGraph: {
+      title: `${category} - Hukum Indonesia`,
+      description: `Jelajahi dokumen hukum kategori ${category} yang diringkas agar lebih mudah dibaca.`,
+      url: `/hukum-indonesia/${category}`,
+      type: "website",
+    },
+  };
 }
 
 export default async function HukumCategoryPage({

@@ -1,5 +1,28 @@
 import { FeedPage } from "@/components/frontend/FeedPage";
 import { getLatestByCategory, searchLatestByCategory } from "@/lib/feeds";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Riset",
+  description:
+    "Dokumentasi eksperimen, insight, dan temuan riset dalam format yang lebih mudah dicerna.",
+  alternates: {
+    canonical: "/riset",
+  },
+  openGraph: {
+    title: "Riset",
+    description:
+      "Dokumentasi eksperimen, insight, dan temuan riset dalam format yang lebih mudah dicerna.",
+    url: "/riset",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Riset",
+    description:
+      "Dokumentasi eksperimen, insight, dan temuan riset dalam format yang lebih mudah dicerna.",
+  },
+};
 
 type PageProps = {
   searchParams?: { q?: string | string[] } | Promise<{ q?: string | string[] }>;

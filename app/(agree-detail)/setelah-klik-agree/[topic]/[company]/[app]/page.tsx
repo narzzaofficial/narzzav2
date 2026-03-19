@@ -1,8 +1,10 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
 
 import { AgreeDocumentCard } from "@/components/agree/AgreeDocumentCard";
+import { absoluteUrl } from "@/lib/site";
 import { getAgreeAppPageData, getAllAgreeDocumentPaths } from "@/lib/setelah-klik-agree";
 
 export const revalidate = 3600;
@@ -18,11 +20,23 @@ export async function generateStaticParams() {
   ).map(({ topic, company, app }) => ({ topic, company, app }));
 }
 
-export async function generateMetadata({ params }: AppPageProps) {
+export async function generateMetadata({ params }: AppPageProps): Promise<Metadata> {
   const { topic, company, app } = await params;
   const data = await getAgreeAppPageData(topic, company, app);
   return data
-    ? { title: `${data.name} - Setelah Klik Agree`, description: data.description }
+    ? {
+        title: `${data.name} - Setelah Klik Agree`,
+        description: data.description,
+        alternates: {
+          canonical: `/setelah-klik-agree/${data.topicData.slug}/${data.company.slug}/${data.slug}`,
+        },
+        openGraph: {
+          title: `${data.name} - Setelah Klik Agree`,
+          description: data.description,
+          url: `/setelah-klik-agree/${data.topicData.slug}/${data.company.slug}/${data.slug}`,
+          type: "website",
+        },
+      }
     : { title: "App Tidak Ditemukan" };
 }
 
@@ -36,6 +50,20 @@ export default async function AgreeAppPage({ params }: AppPageProps) {
 
   return (
     <section className="space-y-5">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: data.name,
+            description: data.description,
+            url: absoluteUrl(
+              `/setelah-klik-agree/${data.topicData.slug}/${data.company.slug}/${data.slug}`
+            ),
+          }),
+        }}
+      />
       <header className="rounded-[32px] border border-slate-300/70 bg-white p-6 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/70">
         <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-amber-500 dark:text-amber-300">
           App / Service

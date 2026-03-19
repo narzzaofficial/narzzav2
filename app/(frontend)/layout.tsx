@@ -23,7 +23,7 @@ export default function Layout({ children }: Props) {
             </div>
           </aside>
 
-          <main className="mx-auto min-w-0 max-w-4xl flex-1 px-2 lg:px-0">
+          <main id="main-content" className="mx-auto min-w-0 max-w-4xl flex-1 px-2 lg:px-0">
             {children}
           </main>
 

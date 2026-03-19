@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import {
   BriefcaseBusiness,
   Building2,
@@ -13,15 +14,31 @@ import {
 } from "lucide-react";
 
 import { AgreeAppIcon } from "@/components/agree/AgreeAppIcon";
+import { absoluteUrl } from "@/lib/site";
 import { getAgreeLandingData } from "@/lib/setelah-klik-agree";
 import type { AgreeTopicIcon } from "@/types/agree";
 
 export const revalidate = 3600;
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Setelah Klik Agree",
   description:
     "Bedah Terms of Service, Privacy Policy, dan kebijakan digital dengan bahasa yang lebih gampang dipahami.",
+  alternates: {
+    canonical: "/setelah-klik-agree",
+  },
+  openGraph: {
+    title: "Setelah Klik Agree",
+    description:
+      "Bedah Terms of Service, Privacy Policy, dan kebijakan digital dengan bahasa yang lebih gampang dipahami.",
+    url: "/setelah-klik-agree",
+    type: "website",
+  },
+  twitter: {
+    title: "Setelah Klik Agree",
+    description:
+      "Bedah Terms of Service, Privacy Policy, dan kebijakan digital dengan bahasa yang lebih gampang dipahami.",
+  },
 };
 
 const latestEntryLabels = {
@@ -52,6 +69,19 @@ export default async function SetelahKlikAgreeLandingPage() {
 
   return (
     <section className="space-y-7 md:space-y-9">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: "Setelah Klik Agree",
+            description:
+              "Bedah Terms of Service, Privacy Policy, dan kebijakan digital dengan bahasa yang lebih gampang dipahami.",
+            url: absoluteUrl("/setelah-klik-agree"),
+          }),
+        }}
+      />
       <header className="glass-panel">
         <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-sky-400 dark:text-sky-300">
           Setelah Klik Agree

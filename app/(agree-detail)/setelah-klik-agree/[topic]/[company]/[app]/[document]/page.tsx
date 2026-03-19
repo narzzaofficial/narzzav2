@@ -5,6 +5,7 @@ import { AgreeMarkdownContent } from "@/components/agree/AgreeMarkdownContent";
 import { AgreeQaSection } from "@/components/agree/AgreeQaSection";
 import { ReadDetailToolbar } from "@/components/reads/read-detail-toolbar";
 import { getAgreeDocumentDetail, getAllAgreeDocumentPaths } from "@/lib/setelah-klik-agree";
+import { absoluteUrl } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -27,6 +28,15 @@ export async function generateMetadata({ params }: DocumentPageProps) {
   return {
     title: `${detail.app.name} ${detail.title} - Setelah Klik Agree`,
     description: detail.dek,
+    alternates: {
+      canonical: `/setelah-klik-agree/${detail.topic.slug}/${detail.company.slug}/${detail.app.slug}/${detail.slug}`,
+    },
+    openGraph: {
+      title: `${detail.app.name} ${detail.title} - Setelah Klik Agree`,
+      description: detail.dek,
+      url: `/setelah-klik-agree/${detail.topic.slug}/${detail.company.slug}/${detail.app.slug}/${detail.slug}`,
+      type: "article",
+    },
   };
 }
 
@@ -39,9 +49,26 @@ export default async function AgreeDocumentDetailPage({ params }: DocumentPagePr
   }
 
   const sharePath = `/setelah-klik-agree/${detail.topic.slug}/${detail.company.slug}/${detail.app.slug}/${detail.slug}`;
+  const articleLd = {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    headline: `${detail.app.name} - ${detail.title}`,
+    description: detail.dek,
+    dateModified: new Date(detail.updatedAt).toISOString(),
+    mainEntityOfPage: absoluteUrl(sharePath),
+    publisher: {
+      "@type": "Organization",
+      name: "Narzza Media Digital",
+    },
+    about: [detail.topic.name, detail.company.name, detail.app.name],
+  };
 
   return (
     <article className="mx-auto w-full max-w-5xl space-y-3 px-2 py-2 md:space-y-4 md:px-3 md:py-3">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleLd) }}
+      />
       <ReadDetailToolbar
         category={detail.app.name}
         slug={detail.slug}

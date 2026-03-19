@@ -1,5 +1,28 @@
 import { FeedPage } from "@/components/frontend/FeedPage";
 import { getLatestByCategory, searchLatestByCategory } from "@/lib/feeds";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Tutorial",
+  description:
+    "Kumpulan tutorial ringkas dan step-by-step untuk belajar, mencoba, dan langsung praktik.",
+  alternates: {
+    canonical: "/tutorial",
+  },
+  openGraph: {
+    title: "Tutorial",
+    description:
+      "Kumpulan tutorial ringkas dan step-by-step untuk belajar, mencoba, dan langsung praktik.",
+    url: "/tutorial",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Tutorial",
+    description:
+      "Kumpulan tutorial ringkas dan step-by-step untuk belajar, mencoba, dan langsung praktik.",
+  },
+};
 
 type PageProps = {
   searchParams?: { q?: string | string[] } | Promise<{ q?: string | string[] }>;

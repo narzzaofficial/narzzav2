@@ -7,6 +7,15 @@
     /* Remove hardcoded background - akan dihandle oleh .bg-canvas */
     @apply overflow-x-clip scroll-smooth transition-colors duration-200;
   }
+
+  :focus-visible {
+    outline: 2px solid rgb(14 165 233 / 0.95);
+    outline-offset: 3px;
+  }
+
+  .dark :focus-visible {
+    outline-color: rgb(103 232 249 / 0.95);
+  }
 }
 
 /* ─── KOMPONEN REUSABLE (Dapat Dipakai Ulang) ─── */

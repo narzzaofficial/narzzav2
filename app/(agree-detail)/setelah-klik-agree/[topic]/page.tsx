@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft } from "lucide-react";
@@ -5,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { AgreeAppCard } from "@/components/agree/AgreeAppCard";
 import { AgreeCompanyCard } from "@/components/agree/AgreeCompanyCard";
 import { AgreeDocumentCard } from "@/components/agree/AgreeDocumentCard";
+import { absoluteUrl } from "@/lib/site";
 import { getAgreeTopicPageData, getAgreeTopics } from "@/lib/setelah-klik-agree";
 
 export const revalidate = 3600;
@@ -18,11 +20,23 @@ export async function generateStaticParams() {
   return topics.map((topic) => ({ topic: topic.slug }));
 }
 
-export async function generateMetadata({ params }: TopicPageProps) {
+export async function generateMetadata({ params }: TopicPageProps): Promise<Metadata> {
   const { topic } = await params;
   const data = await getAgreeTopicPageData(topic);
   return data
-    ? { title: `${data.topic.name} - Setelah Klik Agree`, description: data.topic.description }
+    ? {
+        title: `${data.topic.name} - Setelah Klik Agree`,
+        description: data.topic.description,
+        alternates: {
+          canonical: `/setelah-klik-agree/${data.topic.slug}`,
+        },
+        openGraph: {
+          title: `${data.topic.name} - Setelah Klik Agree`,
+          description: data.topic.description,
+          url: `/setelah-klik-agree/${data.topic.slug}`,
+          type: "website",
+        },
+      }
     : { title: "Topik Tidak Ditemukan" };
 }
 
@@ -36,6 +50,18 @@ export default async function AgreeTopicPage({ params }: TopicPageProps) {
 
   return (
     <section className="space-y-5">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "CollectionPage",
+            name: data.topic.name,
+            description: data.topic.description,
+            url: absoluteUrl(`/setelah-klik-agree/${data.topic.slug}`),
+          }),
+        }}
+      />
       <header className="rounded-[32px] border border-slate-300/70 bg-white p-6 shadow-sm dark:border-slate-700/60 dark:bg-slate-900/70">
         <p className="text-[10px] font-bold uppercase tracking-[0.24em] text-cyan-500 dark:text-cyan-300">
           {data.topic.eyebrow}

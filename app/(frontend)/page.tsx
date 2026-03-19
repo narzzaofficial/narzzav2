@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { FeedPage } from "@/components/frontend/FeedPage";
 import {
   StatusViralSection,
@@ -6,7 +7,28 @@ import {
 } from "@/components/status-bubble";
 import { getLatestByCategory } from "@/lib/feeds";
 import { getAllLaws } from "@/lib/laws";
+import { siteConfig } from "@/lib/site";
 import { getAllStories } from "@/lib/stories";
+
+export const metadata: Metadata = {
+  title: "Beranda",
+  description:
+    "Narzza merangkum berita, tutorial, riset, hukum Indonesia, dan kebijakan digital dalam format yang lebih cepat dipahami.",
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    title: `${siteConfig.shortName} - Media Digital yang Lebih Mudah Dipahami`,
+    description:
+      "Jelajahi update terbaru, konten edukatif, dokumen hukum, dan bedah kebijakan digital dalam format yang lebih ringkas dan jelas.",
+    url: "/",
+  },
+  twitter: {
+    title: `${siteConfig.shortName} - Media Digital yang Lebih Mudah Dipahami`,
+    description:
+      "Jelajahi update terbaru, konten edukatif, dokumen hukum, dan bedah kebijakan digital dalam format yang lebih ringkas dan jelas.",
+  },
+};
 
 export default async function HomePage() {
   const [berita, tutorial, riset, laws, storyRecords] = await Promise.all([
