@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import {
   deleteAgreeCompany,
   fetchAgreeCompanies,
@@ -87,9 +88,9 @@ export default function AgreeCompaniesPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Link href="/admin/agree" className="btn-secondary">
+            <SafeBackButton fallbackHref="/admin/agree" className="btn-secondary">
               Kembali
-            </Link>
+            </SafeBackButton>
             <Link href="/admin/agree/companies/new" className="btn-primary">
               + Tambah Company
             </Link>

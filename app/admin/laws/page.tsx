@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { HUKUM_CATEGORIES } from "@/lib/law-categories";
 import { deleteLaw, fetchLaws } from "@/lib/services/law-service";
 import type { LawDoc } from "@/types/content";
@@ -87,9 +88,9 @@ export default function LawListPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Link href="/admin" className="btn-secondary">
+            <SafeBackButton fallbackHref="/admin" className="btn-secondary">
               Kembali
-            </Link>
+            </SafeBackButton>
             <Link href="/admin/laws/new" className="btn-primary">
               + Tambah Dokumen
             </Link>

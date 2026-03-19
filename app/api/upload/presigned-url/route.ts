@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { randomUUID } from "crypto";
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { requireAdminApiRequest } from "@/lib/auth";
 
 const accessKeyId = process.env.DO_SPACES_KEY;
 const secretAccessKey = process.env.DO_SPACES_SECRET;
@@ -16,6 +17,9 @@ function sanitizeFilename(name: string) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     if (!accessKeyId || !secretAccessKey || !bucket) {
       return NextResponse.json(
         {
@@ -63,4 +67,3 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
-

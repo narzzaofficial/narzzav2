@@ -8,6 +8,7 @@ import {
 } from "@/lib/api-helpers";
 import { makeSlug, normalizeString, toObjectId } from "@/lib/api/agree-crud";
 import { revalidateAgreeCaches } from "@/lib/api/agree-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import { AgreeAppModel } from "@/lib/models/AgreeApp";
 import { AgreeCompanyModel } from "@/lib/models/AgreeCompany";
@@ -21,6 +22,9 @@ type RouteContext = {
 
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const objectId = toObjectId(id);
     if (!objectId) return invalidIdResponse();
@@ -39,6 +43,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const objectId = toObjectId(id);
     if (!objectId) return invalidIdResponse();
@@ -85,6 +92,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const objectId = toObjectId(id);
     if (!objectId) return invalidIdResponse();

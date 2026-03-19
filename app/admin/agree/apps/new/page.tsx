@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { AppForm, type AppFormData } from "@/components/admin/agree/AppForm";
 import { createAgreeApp, fetchAgreeCompanies } from "@/lib/services/agree-admin-service";
 
@@ -51,9 +52,9 @@ export default function NewAgreeAppPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">App Baru</h1>
-          <Link href="/admin/agree/apps" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/agree/apps" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

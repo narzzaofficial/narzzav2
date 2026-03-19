@@ -32,14 +32,14 @@ export function StoryBubble({
         className={[
           "grid h-16 w-16 place-items-center rounded-full p-0.5",
           story.viral
-            ? "bg-gradient-to-br from-emerald-400 via-sky-400 to-orange-400"
+            ? "bg-linear-to-br from-emerald-400 via-sky-400 to-orange-400"
             : "bg-slate-200 dark:bg-slate-700/70",
         ].join(" ")}
       >
         <div
           className={[
             "relative grid h-14 w-14 place-items-center overflow-hidden rounded-full",
-            `bg-gradient-to-br ${palette}`,
+            `bg-linear-to-br ${palette}`,
             "text-xs font-semibold text-white",
           ].join(" ")}
         >

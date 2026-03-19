@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { dbUnavailableResponse, logApiError, validationErrorResponse } from "@/lib/api-helpers";
 import { makeSlug, normalizeString, toObjectId } from "@/lib/api/agree-crud";
 import { revalidateAgreeCaches } from "@/lib/api/agree-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import { AgreeAppModel } from "@/lib/models/AgreeApp";
 import { createAgreeAppSchema } from "@/lib/validation/agree";
@@ -11,6 +12,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 
@@ -29,6 +33,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 

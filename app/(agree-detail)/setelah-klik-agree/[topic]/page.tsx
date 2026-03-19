@@ -1,11 +1,10 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft } from "lucide-react";
 
 import { AgreeAppCard } from "@/components/agree/AgreeAppCard";
 import { AgreeCompanyCard } from "@/components/agree/AgreeCompanyCard";
 import { AgreeDocumentCard } from "@/components/agree/AgreeDocumentCard";
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { absoluteUrl } from "@/lib/site";
 import { getAgreeTopicPageData, getAgreeTopics } from "@/lib/setelah-klik-agree";
 
@@ -72,13 +71,12 @@ export default async function AgreeTopicPage({ params }: TopicPageProps) {
         </p>
       </header>
 
-      <Link
-        href="/setelah-klik-agree"
+      <SafeBackButton
+        fallbackHref="/setelah-klik-agree"
         className="inline-flex items-center gap-1 rounded-xl border border-slate-300/70 px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-600 dark:text-slate-200 dark:hover:border-slate-500"
       >
-        <ArrowLeft className="h-3.5 w-3.5" />
         Kembali
-      </Link>
+      </SafeBackButton>
 
       <section className="space-y-3">
         <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Company dalam topik ini</h2>

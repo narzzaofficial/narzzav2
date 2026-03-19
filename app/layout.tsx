@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ClerkProvider } from "@clerk/nextjs";
 import "./globals.css";
 import { RouteProgress } from "@/components/frontend/RouteProgress";
 import { ThemeProvider } from "@/components/frontend/ThemeProvider";
@@ -60,33 +61,35 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body className="antialiased">
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <a
-            href="#main-content"
-            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[120] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900"
+        <ClerkProvider signInUrl="/sign-in" signInFallbackRedirectUrl="/admin">
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
           >
-            Lewati ke konten utama
-          </a>
-          <script
-            type="application/ld+json"
-            dangerouslySetInnerHTML={{
-              __html: JSON.stringify({
-                "@context": "https://schema.org",
-                "@type": "WebSite",
-                name: siteConfig.name,
-                url: absoluteUrl("/"),
-                description: siteConfig.description,
-              }),
-            }}
-          />
-          <RouteProgress />
-          <div className="min-h-screen bg-canvas">{children}</div>
-        </ThemeProvider>
+            <a
+              href="#main-content"
+              className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[120] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-slate-900"
+            >
+              Lewati ke konten utama
+            </a>
+            <script
+              type="application/ld+json"
+              dangerouslySetInnerHTML={{
+                __html: JSON.stringify({
+                  "@context": "https://schema.org",
+                  "@type": "WebSite",
+                  name: siteConfig.name,
+                  url: absoluteUrl("/"),
+                  description: siteConfig.description,
+                }),
+              }}
+            />
+            <RouteProgress />
+            <div className="min-h-screen bg-canvas">{children}</div>
+          </ThemeProvider>
+        </ClerkProvider>
       </body>
     </html>
   );

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { TopicForm, type TopicFormData } from "@/components/admin/agree/TopicForm";
 import { fetchAgreeTopicById, updateAgreeTopic } from "@/lib/services/agree-admin-service";
 
@@ -57,9 +58,9 @@ export default function EditAgreeTopicPage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-slate-500 dark:text-slate-400">Topic tidak ditemukan</div>
-          <Link href="/admin/agree/topics" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/agree/topics" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -70,9 +71,9 @@ export default function EditAgreeTopicPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Topic</h1>
-          <Link href="/admin/agree/topics" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/agree/topics" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

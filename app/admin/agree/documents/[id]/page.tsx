@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { DocumentForm, type DocumentFormData } from "@/components/admin/agree/DocumentForm";
 import {
   fetchAgreeApps,
@@ -92,9 +93,9 @@ export default function EditAgreeDocumentPage() {
       <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-slate-500 dark:text-slate-400">Document tidak ditemukan</div>
-          <Link href="/admin/agree/documents" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/agree/documents" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -105,9 +106,9 @@ export default function EditAgreeDocumentPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Document</h1>
-          <Link href="/admin/agree/documents" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/agree/documents" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

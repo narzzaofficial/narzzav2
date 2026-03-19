@@ -18,6 +18,7 @@ import {
   parsePositiveInt,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { slugify } from "@/lib/slugify";
 import { getNextSequence } from "@/lib/sequence";
 
@@ -101,6 +102,9 @@ export async function GET(req: NextRequest) {
 // ─── POST /api/feeds ──────────────────────────────────────────────────────────
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 

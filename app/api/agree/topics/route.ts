@@ -7,6 +7,7 @@ import {
 } from "@/lib/api-helpers";
 import { makeSlug, normalizeString } from "@/lib/api/agree-crud";
 import { revalidateAgreeCaches } from "@/lib/api/agree-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { connectDB } from "@/lib/mongodb";
 import { AgreeTopicModel } from "@/lib/models/AgreeTopic";
 import { createAgreeTopicSchema } from "@/lib/validation/agree";
@@ -15,6 +16,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 
@@ -31,6 +35,9 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 

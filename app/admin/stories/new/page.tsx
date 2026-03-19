@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { StoryForm, StoryFormData } from "@/components/admin/StoryForm";
 import { createStory } from "@/lib/services/story-service";
 
@@ -42,9 +43,9 @@ export default function NewStoryPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Story Baru</h1>
-          <Link href="/admin/stories" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/stories" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

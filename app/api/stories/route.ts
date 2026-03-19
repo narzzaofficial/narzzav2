@@ -7,6 +7,7 @@ import {
   parsePositiveInt,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { revalidateStoryCaches, storyToJson } from "@/lib/api/story-helpers";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
@@ -16,6 +17,9 @@ export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 
@@ -61,6 +65,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 

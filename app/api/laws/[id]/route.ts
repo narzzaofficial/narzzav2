@@ -6,6 +6,7 @@ import {
   logApiError,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { lawToJson, revalidateLawCachesBySlug } from "@/lib/api/law-helpers";
 import { connectDB } from "@/lib/mongodb";
 import { LawDocModel } from "@/lib/models/LawDoc";
@@ -18,6 +19,9 @@ type RouteContext = {
 
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const lawId = Number(id);
     if (!Number.isInteger(lawId) || lawId < 1) return invalidIdResponse();
@@ -45,6 +49,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const lawId = Number(id);
     if (!Number.isInteger(lawId) || lawId < 1) return invalidIdResponse();
@@ -98,6 +105,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const lawId = Number(id);
     if (!Number.isInteger(lawId) || lawId < 1) return invalidIdResponse();

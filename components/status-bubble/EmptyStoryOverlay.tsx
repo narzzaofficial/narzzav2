@@ -4,7 +4,7 @@ type EmptyStoryOverlayProps = {
 
 export function EmptyStoryOverlay({ onClose }: EmptyStoryOverlayProps) {
   return (
-    <div className="fixed inset-0 z-[140] bg-black/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-140 bg-black/60 backdrop-blur-md">
       <button
         type="button"
         aria-label="Tutup status populer"

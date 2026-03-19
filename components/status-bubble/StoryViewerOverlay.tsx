@@ -40,7 +40,7 @@ export function StoryViewerOverlay({
   if (!current) return null;
 
   return (
-    <div className="fixed inset-0 z-[140] flex items-center justify-center">
+    <div className="fixed inset-0 z-140 flex items-center justify-center">
       <button
         type="button"
         aria-label="Tutup status"

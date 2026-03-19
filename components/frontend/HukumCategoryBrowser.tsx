@@ -2,8 +2,9 @@
 
 import Link from "next/link";
 import { useMemo, useState } from "react";
-import { ArrowLeft, Search } from "lucide-react";
+import { Search } from "lucide-react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { RelativeTime } from "@/components/frontend/RelativeTime";
 import type { HukumCategory, LawDoc } from "@/types/content";
 
@@ -57,13 +58,12 @@ export function HukumCategoryBrowser({
   return (
     <>
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-        <Link
-          href="/hukum-indonesia"
+        <SafeBackButton
+          fallbackHref="/hukum-indonesia"
           className="inline-flex items-center gap-1 rounded-lg border border-slate-300/70 bg-white/80 px-3 py-2 text-sm font-semibold text-slate-700 transition hover:border-slate-400 dark:border-slate-600/70 dark:bg-slate-800/70 dark:text-slate-200 dark:hover:border-slate-500"
         >
-          <ArrowLeft className="h-3.5 w-3.5" />
           Kembali
-        </Link>
+        </SafeBackButton>
 
         <label className="relative block w-full flex-1">
           <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />

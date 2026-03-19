@@ -14,6 +14,7 @@ import {
   logApiError,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,9 @@ type RouteContext = {
 // ─── GET /api/feeds/[id] ──────────────────────────────────────────────────────
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const feedId = Number(id);
     if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();
@@ -49,6 +53,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 // ─── PUT /api/feeds/[id] ──────────────────────────────────────────────────────
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const feedId = Number(id);
     if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();
@@ -99,6 +106,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 // ─── DELETE /api/feeds/[id] ───────────────────────────────────────────────────
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const feedId = Number(id);
     if (!Number.isInteger(feedId) || feedId < 1) return invalidIdResponse();

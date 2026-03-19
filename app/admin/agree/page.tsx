@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 
 const modules = [
   {
@@ -34,9 +35,9 @@ export default function AgreeAdminHomePage() {
               Pilih modul form yang ingin dikelola.
             </p>
           </div>
-          <Link href="/admin" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         <div className="grid gap-4 md:grid-cols-2">
@@ -57,4 +58,3 @@ export default function AgreeAdminHomePage() {
     </div>
   );
 }
-

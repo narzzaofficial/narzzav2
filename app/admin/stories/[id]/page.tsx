@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { StoryForm, StoryFormData } from "@/components/admin/StoryForm";
 import { fetchStoryById, updateStory } from "@/lib/services/story-service";
 
@@ -66,12 +67,13 @@ export default function EditStoryPage() {
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Story tidak ditemukan
           </div>
-          <Link
-            href="/admin/stories"
+          <SafeBackButton
+            fallbackHref="/admin/stories"
+            showIcon={false}
             className="text-blue-600 hover:underline dark:text-cyan-400"
           >
             Kembali ke Daftar Story
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -86,12 +88,13 @@ export default function EditStoryPage() {
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Story tidak ditemukan
           </div>
-          <Link
-            href="/admin/stories"
+          <SafeBackButton
+            fallbackHref="/admin/stories"
+            showIcon={false}
             className="text-blue-600 hover:underline dark:text-cyan-400"
           >
             Kembali ke Daftar Story
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -102,9 +105,9 @@ export default function EditStoryPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Story #{storyId}</h1>
-          <Link href="/admin/stories" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/stories" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

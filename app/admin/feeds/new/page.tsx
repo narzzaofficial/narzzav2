@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { FeedFormData, FeedForm } from "@/components/admin/FeedForm";
 import { createFeed } from "@/lib/services/feed-service";
 
@@ -48,9 +49,9 @@ export default function NewFeedPage() {
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Feed Baru</h1>
-          <Link href="/admin/feeds" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/feeds" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

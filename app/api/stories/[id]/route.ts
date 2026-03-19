@@ -6,6 +6,7 @@ import {
   logApiError,
   validationErrorResponse,
 } from "@/lib/api-helpers";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { revalidateStoryCaches, storyToJson } from "@/lib/api/story-helpers";
 import { connectDB } from "@/lib/mongodb";
 import { StoryModel } from "@/lib/models/Story";
@@ -18,6 +19,9 @@ type RouteContext = {
 
 export async function GET(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const storyId = Number(id);
     if (!Number.isInteger(storyId) || storyId < 1) return invalidIdResponse();
@@ -42,6 +46,9 @@ export async function GET(_req: NextRequest, context: RouteContext) {
 
 export async function PUT(req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const storyId = Number(id);
     if (!Number.isInteger(storyId) || storyId < 1) return invalidIdResponse();
@@ -89,6 +96,9 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
 export async function DELETE(_req: NextRequest, context: RouteContext) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const { id } = await context.params;
     const storyId = Number(id);
     if (!Number.isInteger(storyId) || storyId < 1) return invalidIdResponse();

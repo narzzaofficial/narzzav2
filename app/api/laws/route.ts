@@ -14,6 +14,7 @@ import { lawToJson, revalidateLawCachesBySlug } from "@/lib/api/law-helpers";
 import { connectDB } from "@/lib/mongodb";
 import { LawDocModel } from "@/lib/models/LawDoc";
 import { HUKUM_CATEGORIES } from "@/lib/law-categories";
+import { requireAdminApiRequest } from "@/lib/auth";
 import { getNextSequence } from "@/lib/sequence";
 import { slugify } from "@/lib/slugify";
 import type { HukumCategory } from "@/types/content";
@@ -94,6 +95,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
+    const authError = await requireAdminApiRequest();
+    if (authError) return authError;
+
     const conn = await connectDB();
     if (!conn) return dbUnavailableResponse();
 

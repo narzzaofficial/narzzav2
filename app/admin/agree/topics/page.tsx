@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { useCallback, useEffect, useState } from "react";
 
 import { deleteAgreeTopic, fetchAgreeTopics } from "@/lib/services/agree-admin-service";
@@ -65,9 +66,9 @@ export default function AgreeTopicsPage() {
             </p>
           </div>
           <div className="flex gap-2">
-            <Link href="/admin/agree" className="btn-secondary">
+            <SafeBackButton fallbackHref="/admin/agree" className="btn-secondary">
               Kembali
-            </Link>
+            </SafeBackButton>
             <Link href="/admin/agree/topics/new" className="btn-primary">
               + Tambah Topic
             </Link>

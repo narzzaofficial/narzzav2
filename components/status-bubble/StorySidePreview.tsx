@@ -17,7 +17,7 @@ export function StorySidePreview({
     <button
       type="button"
       onClick={onClick}
-      className="pointer-events-auto hidden w-[200px] shrink-0 cursor-pointer rounded-2xl border border-slate-200 bg-white/70 p-4 text-left opacity-70 backdrop-blur-sm transition hover:opacity-95 dark:border-slate-700/60 dark:bg-slate-900/50 xl:block"
+      className="pointer-events-auto hidden w-50 shrink-0 cursor-pointer rounded-2xl border border-slate-200 bg-white/70 p-4 text-left opacity-70 backdrop-blur-sm transition hover:opacity-95 dark:border-slate-700/60 dark:bg-slate-900/50 xl:block"
     >
       <p
         className="text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400"

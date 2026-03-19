@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { LawForm, LawFormData } from "@/components/admin/LawForm";
 import { createLaw } from "@/lib/services/law-service";
 
@@ -58,9 +59,9 @@ export default function NewLawPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Dokumen Hukum Baru</h1>
-          <Link href="/admin/laws" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/laws" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (

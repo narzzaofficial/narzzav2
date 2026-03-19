@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { SafeBackButton } from "@/components/frontend/SafeBackButton";
 import { LawForm, LawFormData } from "@/components/admin/LawForm";
 import { fetchLawById, updateLaw } from "@/lib/services/law-service";
 
@@ -77,12 +78,13 @@ export default function EditLawPage() {
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Dokumen hukum tidak ditemukan
           </div>
-          <Link
-            href="/admin/laws"
+          <SafeBackButton
+            fallbackHref="/admin/laws"
+            showIcon={false}
             className="text-blue-600 hover:underline dark:text-cyan-400"
           >
             Kembali ke Daftar Hukum
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -97,12 +99,13 @@ export default function EditLawPage() {
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Dokumen hukum tidak ditemukan
           </div>
-          <Link
-            href="/admin/laws"
+          <SafeBackButton
+            fallbackHref="/admin/laws"
+            showIcon={false}
             className="text-blue-600 hover:underline dark:text-cyan-400"
           >
             Kembali ke Daftar Hukum
-          </Link>
+          </SafeBackButton>
         </div>
       </div>
     );
@@ -113,9 +116,9 @@ export default function EditLawPage() {
       <div className="mx-auto max-w-5xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Dokumen #{lawId}</h1>
-          <Link href="/admin/laws" className="btn-secondary">
+          <SafeBackButton fallbackHref="/admin/laws" className="btn-secondary">
             Kembali
-          </Link>
+          </SafeBackButton>
         </div>
 
         {message && (
