@@ -1,4 +1,4 @@
-﻿type NavLink = {
+type NavLink = {
   title: string;
   note: string;
   href:
@@ -7,7 +7,7 @@
     | "/tutorial"
     | "/riset"
     | "/hukum-indonesia"
-    | "/pusat-hadist"
+    | "/setelah-klik-agree"
     | "/tentang";
 };
 
@@ -21,6 +21,10 @@ export const navLink: NavLink[] = [
     note: "UU, peraturan, putusan",
     href: "/hukum-indonesia",
   },
-  { title: "Pusat Hadist", note: "Kumpulan hadist", href: "/pusat-hadist" },
+  {
+    title: "Setelah Klik Agree",
+    note: "Bedah TOS & privacy policy",
+    href: "/setelah-klik-agree",
+  },
   { title: "Tentang", note: "Misi, tim, kontak", href: "/tentang" },
 ];

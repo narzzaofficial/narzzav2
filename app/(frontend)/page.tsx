@@ -5,24 +5,18 @@ import {
   type StatusStory,
 } from "@/components/status-bubble";
 import { getLatestByCategory } from "@/lib/feeds";
-import type { Metadata } from "next";
-
-// export const metadata: Metadata = createPageMeta({
-//   title: "Berita, Tutorial & Riset",
-//   description:
-//     "Platform media digital yang menyajikan informasi dari berbagai bidang dalam format interaktif dan mudah dipahami. Baca topik panjang jadi santai.",
-//   path: "/",
-// });
+import { getAllLaws } from "@/lib/laws";
+import { getAllStories } from "@/lib/stories";
 
 export default async function HomePage() {
-  // Fetch 10 latest from each category
-  const [berita, tutorial, riset] = await Promise.all([
+  const [berita, tutorial, riset, laws, storyRecords] = await Promise.all([
     getLatestByCategory("Berita", 10),
     getLatestByCategory("Tutorial", 10),
     getLatestByCategory("Riset", 10),
+    getAllLaws(),
+    getAllStories(),
   ]);
 
-  // Combine and sort by createdAt (newest first)
   const allFeeds = [...berita, ...tutorial, ...riset].sort(
     (a, b) => b.createdAt - a.createdAt
   );
@@ -33,7 +27,7 @@ export default async function HomePage() {
     Riset: "from-indigo-500 to-violet-500",
   };
 
-  const statusFeeds: StatusFeedItem[] = allFeeds
+  const feedStatusItems: StatusFeedItem[] = allFeeds
     .filter((feed) => feed.storyId !== null)
     .map((feed) => ({
       id: feed.id,
@@ -43,33 +37,54 @@ export default async function HomePage() {
       takeaway: feed.takeaway,
       category: feed.category,
       storyId: feed.storyId,
+      href: `/feeds/${feed.slug}`,
+      ctaLabel: "Baca Artikel",
+      sourceType: "feed",
     }));
 
+  const lawStatusItems: StatusFeedItem[] = laws
+    .filter((law) => law.storyId !== null)
+    .map((law) => ({
+      id: law.id,
+      slug: law.slug,
+      title: law.title,
+      image: "",
+      takeaway: law.summary || `${law.number}/${law.year}`,
+      category: `Hukum Indonesia - ${law.category}`,
+      storyId: law.storyId,
+      href: `/hukum/${law.slug}`,
+      ctaLabel: "Buka Dokumen",
+      sourceType: "law",
+    }));
+
+  const statusItems = [...feedStatusItems, ...lawStatusItems].sort(
+    (a, b) => b.id - a.id
+  );
+
   const grouped = new Map<number, StatusFeedItem[]>();
-  for (const feed of statusFeeds) {
-    if (feed.storyId === null) continue;
-    const list = grouped.get(feed.storyId) ?? [];
-    list.push(feed);
-    grouped.set(feed.storyId, list);
+  for (const item of statusItems) {
+    if (item.storyId === null) continue;
+    const list = grouped.get(item.storyId) ?? [];
+    list.push(item);
+    grouped.set(item.storyId, list);
   }
 
-  const stories: StatusStory[] = Array.from(grouped.entries())
-    .map(([storyId, items], index) => {
-      const top = items[0];
-      return {
-        id: storyId,
-        name: `Story ${storyId}`,
-        label: `S${storyId}`,
-        type: top.category,
-        palette:
-          paletteByCategory[top.category] || "from-sky-500 to-cyan-500",
-        image: top.image,
-        viral: index < 3,
-      };
-    })
+  const stories: StatusStory[] = storyRecords
+    .filter((story) => grouped.has(story.id))
+    .map((story) => ({
+      id: story.id,
+      name: story.name,
+      label: story.label,
+      type: story.type,
+      palette:
+        story.palette ||
+        paletteByCategory[story.type] ||
+        "from-sky-500 to-cyan-500",
+      image: story.image,
+      viral: story.viral,
+    }))
     .sort((a, b) => a.id - b.id);
 
-  // Fallback sementara kalau belum ada feed yang di-assign storyId
   const fallbackFeeds: StatusFeedItem[] = allFeeds.slice(0, 6).map((feed) => ({
     id: feed.id,
     slug: feed.slug,
@@ -78,10 +93,12 @@ export default async function HomePage() {
     takeaway: feed.takeaway,
     category: feed.category,
     storyId: feed.id,
+    href: `/feeds/${feed.slug}`,
+    ctaLabel: "Baca Artikel",
+    sourceType: "feed",
   }));
 
   const fallbackStories: StatusStory[] = fallbackFeeds.map((feed, index) => {
-
     const baseName = feed.title.trim();
     const shortName =
       baseName.length > 16 ? `${baseName.slice(0, 16).trim()}...` : baseName;
@@ -99,21 +116,25 @@ export default async function HomePage() {
   });
 
   const displayStories = stories.length > 0 ? stories : fallbackStories;
-  const displayFeeds = stories.length > 0 ? statusFeeds : fallbackFeeds;
+  const displayFeeds = stories.length > 0 ? statusItems : fallbackFeeds;
 
   return (
     <>
       <section className="glass-panel -mx-2 rounded-xl p-2 sm:mx-0 sm:rounded-2xl sm:p-5">
-        <StatusViralSection stories={displayStories} feeds={displayFeeds} standalone />
+        <StatusViralSection
+          stories={displayStories}
+          feeds={displayFeeds}
+          standalone
+        />
       </section>
 
       <div className="mt-6">
         <FeedPage
           activePath="/"
           showHeader={false}
-          badge="Narzza Media Digital"
-          title="Berita, tutorial, dan eksperimen dalam format chat"
-          description="Baca topik panjang jadi lebih santai: pertanyaan singkat, jawaban padat, dan inti cepat per konten."
+          badge=""
+          title=""
+          description=""
           initialFeeds={allFeeds}
         />
       </div>

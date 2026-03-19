@@ -18,4 +18,7 @@ export type StatusFeedItem = {
   takeaway: string;
   category: string;
   storyId: number | null;
+  href: string;
+  ctaLabel: string;
+  sourceType: "feed" | "law";
 };

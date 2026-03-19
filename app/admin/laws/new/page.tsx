@@ -29,6 +29,7 @@ const emptyForm: LawFormData = {
     originalUrl: "",
     pdfUrl: "",
   },
+  storyId: null,
 };
 
 export default function NewLawPage() {
@@ -78,4 +79,3 @@ export default function NewLawPage() {
     </div>
   );
 }
-

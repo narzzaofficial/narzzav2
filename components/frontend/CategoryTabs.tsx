@@ -1,6 +1,11 @@
 import type React from "react";
 
-export type HomeCategory = "Semua" | "Berita" | "Tutorial" | "Riset" | "Buku";
+export type HomeCategory =
+  | "Semua"
+  | "Berita"
+  | "Tutorial"
+  | "Riset"
+  | "Hukum Indonesia";
 
 type CategoryConfig = {
   key: HomeCategory;
@@ -46,7 +51,7 @@ const categoryButtons: CategoryConfig[] = [
     },
   },
   {
-    key: "Buku",
+    key: "Hukum Indonesia",
     icon: "📚",
     activeStyle: {
       background: "#f59e0b",

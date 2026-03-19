@@ -1,9 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { HUKUM_CATEGORIES } from "@/lib/law-categories";
-import type { LawDoc } from "@/types/content";
+import type { LawDoc, Story } from "@/types/content";
+import { SelectInput } from "../form";
 
 export type LawFormData = {
   title: string;
@@ -22,6 +23,7 @@ export type LawFormData = {
     originalUrl: string;
     pdfUrl?: string;
   };
+  storyId?: number | null;
 };
 
 type LawFormProps = {
@@ -55,6 +57,14 @@ export function LawForm({
 }: LawFormProps) {
   const [form, setForm] = useState<LawFormData>(initialData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [stories, setStories] = useState<Story[]>([]);
+
+  useEffect(() => {
+    fetch("/api/stories")
+      .then((res) => res.json())
+      .then((data: { items?: Story[] }) => setStories(data.items ?? []))
+      .catch(() => setStories([]));
+  }, []);
 
   const updateLine = (
     index: number,
@@ -90,6 +100,11 @@ export function LawForm({
       setIsSubmitting(false);
     }
   }
+
+  const storyOptions = stories.map((story) => ({
+    value: story.id,
+    label: `${story.name} (${story.type})`,
+  }));
 
   return (
     <div className="glass-panel">
@@ -142,6 +157,21 @@ export function LawForm({
             <option value="Diubah">Diubah</option>
             <option value="Dicabut">Dicabut</option>
           </select>
+        </div>
+
+        <div className="sm:col-span-2">
+          <SelectInput
+            label="Assign ke Story (opsional)"
+            value={form.storyId ?? ""}
+            onChange={(value) =>
+              setForm((prev) => ({
+                ...prev,
+                storyId: value === "" ? null : Number(value),
+              }))
+            }
+            options={storyOptions}
+            placeholder="— Tidak di-assign —"
+          />
         </div>
 
         <div>

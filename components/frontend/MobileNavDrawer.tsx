@@ -25,7 +25,7 @@ const NAV_ICONS: Record<string, LucideIcon> = {
   "/tutorial": GraduationCap,
   "/riset": FlaskConical,
   "/hukum-indonesia": Scale,
-  "/pusat-hadist": ScrollText,
+  "/setelah-klik-agree": ScrollText,
   "/tentang": Info,
 };
 

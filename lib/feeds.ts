@@ -1,5 +1,6 @@
 export {
   getLatestByCategory,
+  searchLatestByCategory,
   getFeedsByCategory,
   getFeedBySlug,
   getFeedById,

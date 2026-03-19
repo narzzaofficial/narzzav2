@@ -109,8 +109,8 @@ export function StoryViewerOverlay({
             prev
           </button>
 
-          <Link href={`/feeds/${current.slug}`} onClick={onClose} className="btn-secondary font-semibold">
-            Baca Artikel
+          <Link href={current.href} onClick={onClose} className="btn-secondary font-semibold">
+            {current.ctaLabel}
           </Link>
 
           <button

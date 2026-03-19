@@ -34,6 +34,7 @@ export interface ILawDoc {
     originalUrl: string;
     pdfUrl?: string;
   };
+  storyId?: number | null;
   createdAt: number;
 }
 
@@ -91,17 +92,16 @@ const LawDocSchema = new Schema<ILawDoc>(
       ),
       required: true,
     },
+    storyId: { type: Number, default: null },
     createdAt: { type: Number, default: Date.now },
   },
   { versionKey: false }
 );
 
 LawDocSchema.index({ category: 1, promulgatedAt: -1 });
-LawDocSchema.index({ slug: 1 }, { unique: true });
 LawDocSchema.index({ number: 1, year: 1 }, { unique: true });
 LawDocSchema.index({ title: "text", summary: "text", originalText: "text" });
 
 export const LawDocModel =
   (models.LawDoc as mongoose.Model<ILawDoc>) ||
   model<ILawDoc>("LawDoc", LawDocSchema);
-

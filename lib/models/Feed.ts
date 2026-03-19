@@ -62,7 +62,6 @@ const FeedSchema = new Schema<IFeed>(
 // ─── Indexes ──────────────────────────────────────────────────────────────────
 FeedSchema.index({ createdAt: -1 });
 FeedSchema.index({ category: 1, createdAt: -1 });
-FeedSchema.index({ slug: 1 }, { unique: true });
 FeedSchema.index(
   { title: "text", takeaway: "text", "lines.text": "text" },
   {

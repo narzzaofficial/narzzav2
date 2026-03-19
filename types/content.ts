@@ -16,7 +16,12 @@ export type Source = {
 export type Story = {
   id: number;
   name: string;
+  label: string;
   type: string;
+  image: string;
+  palette?: string;
+  viral: boolean;
+  createdAt: number;
 };
 
 // ─── 1. TIPE DATABASE FINAL (The Single Source of Truth) ───
@@ -99,6 +104,7 @@ export interface LawDoc {
   effectiveAt?: number;
   status: "Berlaku" | "Diubah" | "Dicabut";
   source: LawSource;
+  storyId: number | null;
   createdAt: number;
 }
 

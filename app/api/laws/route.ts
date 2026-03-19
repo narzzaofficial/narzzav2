@@ -122,6 +122,7 @@ export async function POST(req: NextRequest) {
       effectiveAt: body.effectiveAt,
       status: body.status ?? "Berlaku",
       source: body.source,
+      storyId: body.storyId ?? null,
       createdAt: Date.now(),
     });
 

@@ -11,6 +11,16 @@ const adminLinks = [
     description: "Dokumen hukum, naskah original, dan explanation Q&A",
     href: "/admin/laws",
   },
+  {
+    title: "Kelola Story",
+    description: "Status viral, grouping feed, dan grouping hukum indonesia",
+    href: "/admin/stories",
+  },
+  {
+    title: "Kelola Setelah Klik Agree",
+    description: "Topic, company, app, dan dokumen Terms/Privacy",
+    href: "/admin/agree",
+  },
 ];
 
 export default function AdminHomePage() {

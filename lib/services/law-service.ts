@@ -1,27 +1,7 @@
-import type {
-  HukumCategory,
-  LawDoc,
-  PaginatedLawDocs,
-} from "@/types/content";
+import type { CreateLawInput } from "@/types/api";
+import type { HukumCategory, LawDoc, PaginatedLawDocs } from "@/types/content";
 
-export type LawFormInput = {
-  title: string;
-  category: HukumCategory;
-  summary: string;
-  originalText: string;
-  explanationLines: LawDoc["explanationLines"];
-  number: string;
-  year: number;
-  enactedAt: number;
-  promulgatedAt: number;
-  effectiveAt?: number;
-  status: LawDoc["status"];
-  source: {
-    institution: string;
-    originalUrl: string;
-    pdfUrl?: string;
-  };
-};
+export type LawFormInput = CreateLawInput;
 
 export async function fetchLaws(params: {
   category?: HukumCategory;

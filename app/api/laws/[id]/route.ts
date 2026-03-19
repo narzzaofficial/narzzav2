@@ -66,7 +66,12 @@ export async function PUT(req: NextRequest, context: RouteContext) {
 
     const result = await LawDocModel.findOneAndUpdate(
       { id: lawId },
-      { $set: body },
+      {
+        $set: {
+          ...body,
+          ...("storyId" in body ? { storyId: body.storyId ?? null } : {}),
+        },
+      },
       { new: true, lean: true }
     );
 

@@ -7,6 +7,17 @@ import { FeedModel, type IFeed } from "@/lib/models/Feed";
 import type { Category, Feed, PaginatedFeeds } from "@/types/content";
 
 const FEED_TAG = "feeds";
+const MAX_SEARCH_LEN = 80;
+
+function normalizeSearchQuery(raw: string): string {
+  const trimmed = raw.trim().replace(/\s+/g, " ");
+  if (!trimmed) return "";
+  return trimmed.slice(0, MAX_SEARCH_LEN);
+}
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
 
 async function fetchFeedsByCategory(
   category: Category,
@@ -55,6 +66,35 @@ const getLatestByCategoryCached = unstable_cache(
   { revalidate: 3600, tags: [FEED_TAG] }
 );
 
+const searchLatestByCategoryCached = unstable_cache(
+  async (category: Category, query: string, limit = 20): Promise<Feed[]> => {
+    const normalized = normalizeSearchQuery(query);
+    if (!normalized) {
+      const data = await fetchFeedsByCategory(category, 1, limit);
+      return data.feeds;
+    }
+
+    const conn = await connectDB();
+    if (!conn) return [];
+
+    // Title-only search (case-insensitive).
+    const pattern = escapeRegex(normalized);
+    const docs = await FeedModel.find({
+      category,
+      title: { $regex: pattern, $options: "i" },
+    })
+      .sort({ createdAt: -1 })
+      .limit(limit)
+      .select("id slug title category createdAt image lineCount takeaway storyId")
+      .lean();
+
+    return docs.map((item) => feedToJson(item as IFeed));
+  },
+  ["feeds-search-latest-by-category"],
+  // Search query bisa banyak variannya, jadi cache-nya lebih pendek.
+  { revalidate: 300, tags: [FEED_TAG] }
+);
+
 const getFeedsByCategoryCached = unstable_cache(
   async (category: Category, page = 1, limit = 20): Promise<PaginatedFeeds> =>
     fetchFeedsByCategory(category, page, limit),
@@ -78,6 +118,7 @@ const getFeedBySlugCached = unstable_cache(
 );
 
 export const getLatestByCategory = cache(getLatestByCategoryCached);
+export const searchLatestByCategory = cache(searchLatestByCategoryCached);
 export const getFeedsByCategory = cache(getFeedsByCategoryCached);
 export const getFeedBySlug = cache(getFeedBySlugCached);
 

@@ -86,9 +86,14 @@ export default function LawListPage() {
               Kelola dokumen hukum dengan cache & ISR seperti feeds.
             </p>
           </div>
-          <Link href="/admin/laws/new" className="btn-primary">
-            + Tambah Dokumen
-          </Link>
+          <div className="flex gap-2">
+            <Link href="/admin" className="btn-secondary">
+              Kembali
+            </Link>
+            <Link href="/admin/laws/new" className="btn-primary">
+              + Tambah Dokumen
+            </Link>
+          </div>
         </div>
 
         {message && (
@@ -144,6 +149,9 @@ export default function LawListPage() {
                   <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Nomor/Tahun
                   </th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
+                    Story
+                  </th>
                   <th className="px-4 py-3 text-right text-xs font-semibold uppercase tracking-wider text-slate-600 dark:text-slate-400">
                     Aksi
                   </th>
@@ -171,6 +179,9 @@ export default function LawListPage() {
                     </td>
                     <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
                       {item.number}/{item.year}
+                    </td>
+                    <td className="px-4 py-3 text-sm text-slate-700 dark:text-slate-300">
+                      {item.storyId ? `Story #${item.storyId}` : "—"}
                     </td>
                     <td className="px-4 py-3">
                       <div className="flex items-center justify-end gap-2">
@@ -202,6 +213,11 @@ export default function LawListPage() {
                 <p className="mt-1 text-xs text-slate-500">
                   {item.category} - {item.number}/{item.year}
                 </p>
+                {item.storyId ? (
+                  <p className="mt-1 text-xs text-slate-500">
+                    Story #{item.storyId}
+                  </p>
+                ) : null}
                 <div className="mt-3 flex gap-2">
                   <Link
                     href={`/admin/laws/${item.id}`}

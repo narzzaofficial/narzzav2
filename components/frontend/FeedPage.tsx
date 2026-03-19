@@ -1,6 +1,7 @@
 "use client";
 
 import { Feed } from "@/types/content";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { HomeCategory, CategoryTabs } from "./CategoryTabs";
 import { FeedTitleCard } from "./FeedTitleCard";
@@ -14,11 +15,7 @@ type FeedPageProps = {
   showHeader?: boolean;
   category?: Feed["category"];
   initialFeeds: Feed[];
-  // NOTE: Commented out untuk nanti
-  // initialStories: Story[];
-  // initialBooks: Book[];
-  // initialRoadmaps: Roadmap[];
-  // initialProducts: Product[];
+  initialQuery?: string;
 };
 
 export function FeedPage({
@@ -29,9 +26,12 @@ export function FeedPage({
   showHeader = true,
   category,
   initialFeeds = [],
+  initialQuery = "",
 }: FeedPageProps) {
+  const router = useRouter();
   const isHome = activePath === "/";
   const shouldShowHeader = showHeader && !isHome;
+  const [searchValue, setSearchValue] = useState(initialQuery);
 
   // Default category: Semua untuk home, Berita untuk lainnya
   const [activeCategory, setActiveCategory] = useState<HomeCategory>(
@@ -52,8 +52,8 @@ export function FeedPage({
       return initialFeeds;
     }
 
-    if (activeCategory === "Buku") {
-      return []; // NOTE: Nanti implement books
+    if (activeCategory === "Hukum Indonesia") {
+      return [];
     }
 
     return initialFeeds.filter((f) => f.category === activeCategory);
@@ -82,18 +82,54 @@ export function FeedPage({
         </section>
       )}
 
-      {/* NOTE: Mobile Status + Global Search - implement nanti */}
-      {/* {isHome && (
-        <div className="mt-4 flex flex-col gap-4">
-          <GlobalSearchForm />
-        </div>
-      )} */}
+      {/* Search - Only on Category Pages */}
+      {!isHome && (
+        <form
+          className="glass-panel mb-6 p-4"
+          onSubmit={(event) => {
+            event.preventDefault();
+            const next = searchValue.trim();
+            const params = new URLSearchParams();
+            if (next) params.set("q", next);
+            const url = params.size ? `${activePath}?${params}` : activePath;
+            router.replace(url);
+          }}
+        >
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+            <input
+              type="search"
+              value={searchValue}
+              onChange={(event) => {
+                const next = event.target.value;
+                setSearchValue(next);
+
+                // Auto-reset when query is cleared (avoids extra clicks, only 1 navigation).
+                if (initialQuery && next.trim() === "") {
+                  router.replace(activePath);
+                }
+              }}
+              placeholder={`Cari ${category ?? "konten"}...`}
+              className="form-input flex-1"
+            />
+            <button type="submit" className="btn-primary sm:self-stretch">
+              Cari
+            </button>
+          </div>
+        </form>
+      )}
 
       {/* Category Tabs - Only on Home */}
       {isHome && (
         <CategoryTabs
           activeCategory={activeCategory}
-          onChange={setActiveCategory}
+          onChange={(nextCategory) => {
+            if (nextCategory === "Hukum Indonesia") {
+              router.push("/hukum-indonesia");
+              return;
+            }
+
+            setActiveCategory(nextCategory);
+          }}
         />
       )}
 
@@ -102,8 +138,8 @@ export function FeedPage({
         feeds={filteredFeeds}
         isTutorialLayout={isTutorialCategory}
         emptyMessage={
-          activeCategory === "Buku"
-            ? "Belum ada buku."
+          activeCategory === "Hukum Indonesia"
+            ? "Mengarahkan ke Hukum Indonesia..."
             : "Belum ada konten untuk kategori ini."
         }
       />

@@ -1,0 +1,112 @@
+import { NextRequest, NextResponse } from "next/server";
+
+import {
+  dbUnavailableResponse,
+  invalidIdResponse,
+  logApiError,
+  validationErrorResponse,
+} from "@/lib/api-helpers";
+import { makeSlug, normalizeString, toObjectId } from "@/lib/api/agree-crud";
+import { revalidateAgreeCaches } from "@/lib/api/agree-helpers";
+import { connectDB } from "@/lib/mongodb";
+import { AgreeAppModel } from "@/lib/models/AgreeApp";
+import { AgreeCompanyModel } from "@/lib/models/AgreeCompany";
+import { updateAgreeCompanySchema } from "@/lib/validation/agree";
+
+export const dynamic = "force-dynamic";
+
+type RouteContext = {
+  params: Promise<{ id: string }>;
+};
+
+export async function GET(_req: NextRequest, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    const objectId = toObjectId(id);
+    if (!objectId) return invalidIdResponse();
+
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
+    const item = await AgreeCompanyModel.findById(objectId).lean();
+    if (!item) return NextResponse.json({ error: "Company not found" }, { status: 404 });
+    return NextResponse.json(item);
+  } catch (error) {
+    logApiError("GET /api/agree/companies/[id] error", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function PUT(req: NextRequest, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    const objectId = toObjectId(id);
+    if (!objectId) return invalidIdResponse();
+
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
+    const body = await req.json();
+    const parsed = updateAgreeCompanySchema.safeParse(body);
+    if (!parsed.success) return validationErrorResponse(parsed.error);
+    const input = parsed.data;
+    const update: Record<string, unknown> = { updatedAt: Date.now() };
+
+    if (input.name !== undefined) {
+      const name = normalizeString(input.name);
+      if (!name) return validationErrorResponse({ message: "Company name cannot be empty" });
+      update.name = name;
+      if (input.slug === undefined) update.slug = makeSlug(name);
+    }
+    if (input.slug !== undefined) update.slug = makeSlug(normalizeString(input.slug));
+    if (input.topicId !== undefined) {
+      const topicId = toObjectId(input.topicId);
+      if (!topicId) return validationErrorResponse({ message: "Invalid topicId" });
+      update.topicId = topicId;
+    }
+    if (input.logo !== undefined) update.logo = normalizeString(input.logo);
+    if (input.description !== undefined) update.description = normalizeString(input.description);
+    if (input.isActive !== undefined) update.isActive = Boolean(input.isActive);
+
+    const item = await AgreeCompanyModel.findByIdAndUpdate(
+      objectId,
+      { $set: update },
+      { new: true, lean: true }
+    );
+    if (!item) return NextResponse.json({ error: "Company not found" }, { status: 404 });
+
+    revalidateAgreeCaches();
+    return NextResponse.json(item);
+  } catch (error) {
+    logApiError("PUT /api/agree/companies/[id] error", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}
+
+export async function DELETE(_req: NextRequest, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    const objectId = toObjectId(id);
+    if (!objectId) return invalidIdResponse();
+
+    const conn = await connectDB();
+    if (!conn) return dbUnavailableResponse();
+
+    const inUse = await AgreeAppModel.exists({ companyId: objectId });
+    if (inUse) {
+      return NextResponse.json(
+        { error: "Company masih dipakai oleh app. Hapus app terlebih dahulu." },
+        { status: 409 }
+      );
+    }
+
+    const result = await AgreeCompanyModel.findByIdAndDelete(objectId).lean();
+    if (!result) return NextResponse.json({ error: "Company not found" }, { status: 404 });
+
+    revalidateAgreeCaches();
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    logApiError("DELETE /api/agree/companies/[id] error", error);
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+  }
+}

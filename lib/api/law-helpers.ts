@@ -20,6 +20,7 @@ export function lawToJson(doc: ILawDoc): LawDoc {
     effectiveAt: doc.effectiveAt,
     status: doc.status,
     source: doc.source,
+    storyId: doc.storyId ?? null,
     createdAt: doc.createdAt ?? Date.now(),
   };
 }

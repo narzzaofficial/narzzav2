@@ -7,9 +7,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "seed:laws": "node scripts/seed-laws.mjs"
+    "seed:laws": "node scripts/seed-laws.mjs",
+    "seed:agree": "node --env-file=.env.local scripts/seed-agree.mjs"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1012.0",
+    "@aws-sdk/s3-request-presigner": "^3.1012.0",
     "lucide-react": "^0.577.0",
     "mongoose": "^9.3.0",
     "next": "16.1.6",
@@ -17,6 +20,8 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-hook-form": "^7.71.2",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1",
     "zod": "^4.3.6"
   },
   "devDependencies": {

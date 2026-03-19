@@ -7,7 +7,8 @@ import { useTheme } from "next-themes";
 type ReadDetailToolbarProps = {
   category: string;
   slug: string;
-  pathPrefix?: "/feeds" | "/hukum";
+  pathPrefix?: "/feeds" | "/hukum" | "/setelah-klik-agree";
+  sharePath?: string;
   shareTitle?: string;
   shareText?: string;
   labelPrefix?: string;
@@ -17,6 +18,7 @@ export function ReadDetailToolbar({
   category,
   slug,
   pathPrefix = "/feeds",
+  sharePath,
   shareTitle = "Narzza Media Digital",
   shareText = "Baca konten ini di Narzza",
   labelPrefix = "",
@@ -27,7 +29,9 @@ export function ReadDetailToolbar({
   const badgeText = labelPrefix ? `${labelPrefix}: ${category}` : category;
 
   const handleShare = async () => {
-    const url = `${window.location.origin}${pathPrefix}/${slug}`;
+    const url = sharePath
+      ? `${window.location.origin}${sharePath}`
+      : `${window.location.origin}${pathPrefix}/${slug}`;
     const shareData = {
       title: shareTitle,
       text: shareText,

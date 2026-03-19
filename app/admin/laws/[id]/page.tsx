@@ -46,6 +46,7 @@ export default function EditLawPage() {
             originalUrl: law.source.originalUrl,
             pdfUrl: law.source.pdfUrl || "",
           },
+          storyId: law.storyId ?? null,
         });
       } catch (error) {
         console.error(error);
@@ -133,4 +134,3 @@ export default function EditLawPage() {
     </div>
   );
 }
-

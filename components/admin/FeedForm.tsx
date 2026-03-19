@@ -21,6 +21,10 @@ export type FeedFormData = {
   storyId?: number | null;
 };
 
+type StoriesResponse = {
+  items: Story[];
+};
+
 type FeedFormProps = {
   initialData: FeedFormData;
   onSubmit: (data: FeedFormData) => Promise<void>;
@@ -46,7 +50,7 @@ export function FeedForm({
   useEffect(() => {
     fetch("/api/stories")
       .then((res) => res.json())
-      .then((data: Story[]) => setStories(data))
+      .then((data: StoriesResponse) => setStories(data.items ?? []))
       .catch(() => setStories([]));
   }, []);
 
