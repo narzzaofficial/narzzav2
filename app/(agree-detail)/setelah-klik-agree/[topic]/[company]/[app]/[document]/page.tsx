@@ -73,6 +73,7 @@ export default async function AgreeDocumentDetailPage({ params }: DocumentPagePr
         category={detail.app.name}
         slug={detail.slug}
         pathPrefix="/setelah-klik-agree"
+        fallbackHref={`/setelah-klik-agree/${detail.topic.slug}/${detail.company.slug}/${detail.app.slug}`}
         sharePath={sharePath}
         shareTitle={`${detail.app.name} ${detail.title} - Setelah Klik Agree`}
         shareText={detail.dek}

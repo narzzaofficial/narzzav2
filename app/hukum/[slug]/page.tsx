@@ -95,6 +95,7 @@ export default async function LawDetailPage({ params }: LawDetailPageProps) {
         category={law.category}
         slug={law.slug}
         pathPrefix="/hukum"
+        fallbackHref={`/hukum-indonesia/${law.category}`}
         shareTitle={`${law.number}/${law.year} - ${law.title}`}
         shareText="Baca dokumen hukum ini di Narzza"
         labelPrefix="Label Hukum"

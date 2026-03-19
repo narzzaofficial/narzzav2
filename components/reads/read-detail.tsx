@@ -11,10 +11,20 @@ type ReadDetailProps = {
   comments: FeedComment[];
 };
 
+const feedFallbackByCategory: Record<Feed["category"], string> = {
+  Berita: "/berita",
+  Tutorial: "/tutorial",
+  Riset: "/riset",
+};
+
 export function ReadDetail({ feed, comments }: ReadDetailProps) {
   return (
     <article className="mx-auto w-full max-w-215 px-1 pb-1 md:px-2 md:pb-2">
-      <ReadDetailToolbar category={feed.category} slug={feed.slug} />
+      <ReadDetailToolbar
+        category={feed.category}
+        slug={feed.slug}
+        fallbackHref={feedFallbackByCategory[feed.category] ?? "/"}
+      />
 
       <div className="read-card">
         <div className="relative h-56 w-full md:h-72">

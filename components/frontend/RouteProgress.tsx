@@ -2,6 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { trackNavigationEntry } from "@/lib/navigation-history";
 
 function shouldHandleAnchor(anchor: HTMLAnchorElement) {
   const href = anchor.getAttribute("href");
@@ -76,6 +77,7 @@ export function RouteProgress() {
   }
 
   useEffect(() => {
+    trackNavigationEntry(pathname);
     finishProgress();
   }, [pathname]);
 
