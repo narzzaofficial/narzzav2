@@ -64,9 +64,6 @@ export function StoryViewerOverlay({
             <h3 className="mt-1 text-lg font-bold text-slate-900 dark:text-slate-100">
               {selectedStory.name}
             </h3>
-            <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
-              {current.title} • {current.category}
-            </p>
           </div>
 
           <button type="button" onClick={onClose} className="btn-secondary">
@@ -109,7 +106,11 @@ export function StoryViewerOverlay({
             prev
           </button>
 
-          <Link href={current.href} onClick={onClose} className="btn-secondary font-semibold">
+          <Link
+            href={current.href}
+            onClick={onClose}
+            className="btn-secondary font-semibold"
+          >
             {current.ctaLabel}
           </Link>
 
@@ -130,4 +131,3 @@ export function StoryViewerOverlay({
     </div>
   );
 }
-
