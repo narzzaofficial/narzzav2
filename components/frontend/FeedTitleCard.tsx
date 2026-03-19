@@ -69,7 +69,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
 
         {/* Content */}
         <div className="flex flex-1 flex-col p-2.5">
-          <h2 className="break-words text-xs font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-200">
+          <h2 className="wrap-break-word text-[13px] font-semibold leading-snug transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-200">
             {feed.title}
           </h2>
 
@@ -124,7 +124,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
             </div>
 
             {/* Title */}
-            <h2 className="mb-2 break-words text-sm font-bold leading-tight transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-300 md:text-base">
+            <h2 className="mb-2 break-words text-[1.05rem] font-bold leading-tight transition-colors group-hover:text-blue-600 dark:group-hover:text-cyan-300 md:text-[1.25rem]">
               {feed.title}
             </h2>
 
@@ -149,7 +149,7 @@ export function FeedTitleCard({ feed, index }: FeedTitleCardProps) {
                   Inti Cepat
                 </span>
               </div>
-              <p className="line-clamp-2 text-xs leading-relaxed text-slate-600 dark:text-slate-300 font-medium">
+              <p className="line-clamp-2 text-[13px] leading-relaxed text-slate-600 dark:text-slate-300 font-medium md:text-[14px]">
                 {feed.takeaway}
               </p>
             </div>

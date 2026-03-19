@@ -62,7 +62,7 @@ export function TutorialCard({ feed, index }: TutorialCardProps) {
             </span>
           </div>
 
-          <h3 className="break-words text-[13px] font-bold leading-snug transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-300 sm:text-sm md:text-[15px]">
+          <h3 className="break-words text-[14px] font-bold leading-snug transition-colors group-hover:text-emerald-600 dark:group-hover:text-emerald-300 sm:text-[15px] md:text-[17px]">
             {feed.title}
           </h3>
 

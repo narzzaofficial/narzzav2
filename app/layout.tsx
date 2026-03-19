@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { RouteProgress } from "@/components/frontend/RouteProgress";
 import { ThemeProvider } from "@/components/frontend/ThemeProvider";
 
 export const metadata: Metadata = {
@@ -21,6 +22,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
+          <RouteProgress />
           <div className="min-h-screen bg-canvas">{children}</div>
         </ThemeProvider>
       </body>
