@@ -210,11 +210,15 @@ export function Navigation() {
 
               {/* Toggle Switch */}
               <button
+                type="button"
                 onClick={() => setTheme(isDark ? "light" : "dark")}
                 className={`
-                  relative h-6 w-11 rounded-full transition-colors focus:outline-none
+                  relative h-6 w-11 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400/70 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-50 dark:focus-visible:ring-cyan-300/70 dark:focus-visible:ring-offset-slate-800
                   ${isDark ? "bg-sky-500" : "bg-slate-300"}
                 `}
+                aria-label={isDark ? "Aktifkan light mode" : "Aktifkan dark mode"}
+                aria-pressed={isDark}
+                title={isDark ? "Aktifkan light mode" : "Aktifkan dark mode"}
               >
                 <div
                   className={`
