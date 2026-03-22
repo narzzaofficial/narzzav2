@@ -3,6 +3,7 @@ import "./globals.css";
 import { RouteProgress } from "@/components/frontend/RouteProgress";
 import { ThemeProvider } from "@/components/frontend/ThemeProvider";
 import { absoluteUrl, siteConfig } from "@/lib/site";
+import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.siteUrl),
@@ -86,6 +87,7 @@ export default function RootLayout({
           />
           <RouteProgress />
           <div className="min-h-screen bg-canvas">{children}</div>
+          <Analytics />
         </ThemeProvider>
       </body>
     </html>
