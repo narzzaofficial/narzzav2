@@ -19,7 +19,7 @@ export default function FeedListPage() {
       let hasMore = true;
 
       while (hasMore) {
-        const data = await fetchFeeds({ page, limit: 100 });
+        const data = await fetchFeeds({ page, limit: 100, fresh: true });
         merged.push(...data.feeds);
         hasMore = data.pagination.hasMore;
         page += 1;

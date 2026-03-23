@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
     if (!conn) return dbUnavailableResponse();
 
     const { searchParams } = req.nextUrl;
+    const fresh = searchParams.get("fresh") === "1";
     const category = searchParams.get("category");
     const slug = normalizeSlug(searchParams.get("slug"));
     const rawSlug = searchParams.get("slug");
@@ -54,6 +55,11 @@ export async function GET(req: NextRequest) {
       const feed = await FeedModel.findOne({ slug }).lean();
       if (!feed) {
         return NextResponse.json({ error: "Feed not found" }, { status: 404 });
+      }
+      if (fresh) {
+        return NextResponse.json(feedToJson(feed), {
+          headers: { "Cache-Control": "no-store" },
+        });
       }
       return cachedJson(feedToJson(feed), 3600);
     }
@@ -84,6 +90,12 @@ export async function GET(req: NextRequest) {
         hasMore: skip + feeds.length < total,
       },
     };
+
+    if (fresh) {
+      return NextResponse.json(response, {
+        headers: { "Cache-Control": "no-store" },
+      });
+    }
 
     // Page 1 cache 1 jam, sisanya 5 menit
     const cacheTime = page === 1 ? 3600 : 300;

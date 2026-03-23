@@ -12,13 +12,17 @@ export async function fetchFeeds(params: {
   category?: Category;
   page?: number;
   limit?: number;
+  fresh?: boolean;
 }): Promise<PaginatedFeeds> {
   const query = new URLSearchParams();
   if (params.category) query.set("category", params.category);
   if (params.page) query.set("page", String(params.page));
   if (params.limit) query.set("limit", String(params.limit));
+  if (params.fresh) query.set("fresh", "1");
 
-  const res = await fetch(`/api/feeds?${query}`);
+  const res = await fetch(`/api/feeds?${query}`, {
+    cache: params.fresh ? "no-store" : "default",
+  });
   if (!res.ok) throw new Error("Failed to fetch feeds");
   return res.json();
 }
