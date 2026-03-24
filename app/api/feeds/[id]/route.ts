@@ -81,7 +81,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     const result = await FeedModel.findOneAndUpdate(
       { id: feedId },
       { $set: updateData },
-      { new: true, lean: true }
+      { returnDocument: "after", lean: true }
     );
 
     if (!result) {

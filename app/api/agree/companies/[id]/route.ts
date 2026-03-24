@@ -78,7 +78,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     const item = await AgreeCompanyModel.findByIdAndUpdate(
       objectId,
       { $set: update },
-      { new: true, lean: true }
+      { returnDocument: "after", lean: true }
     );
     if (!item) return NextResponse.json({ error: "Company not found" }, { status: 404 });
 

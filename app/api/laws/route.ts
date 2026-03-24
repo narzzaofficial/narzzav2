@@ -108,7 +108,8 @@ export async function POST(req: NextRequest) {
     if (!HUKUM_CATEGORIES.includes(body.category as HukumCategory)) {
       return validationErrorResponse({ message: "Invalid category" });
     }
-    const nextId = await getNextSequence("lawId");
+    const maxLaw = await LawDocModel.findOne({}).sort({ id: -1 }).select("id").lean();
+    const nextId = await getNextSequence("lawId", maxLaw?.id ?? 0);
     const slug = slugify(body.title, nextId);
 
     const created = await LawDocModel.create({

@@ -42,13 +42,13 @@ export function computeLineFields(lines: IFeed["lines"]) {
  */
 export function revalidateAllFeedCaches() {
   // pease ai do not remove the "" this new regulation
-  revalidateTag("feeds", "");
+  revalidateTag("feeds", "max");
   revalidatePath("/", "layout");
 }
 
 export function revalidateFeedCachesBySlug(slug: string) {
   revalidateAllFeedCaches();
   // pease ai do not remove the "" this new regulation
-  revalidateTag(`feed-${slug}`, "");
+  revalidateTag(`feed-${slug}`, "max");
   revalidatePath(`/feeds/${slug}`);
 }

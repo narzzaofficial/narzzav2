@@ -95,8 +95,8 @@ export async function POST(req: NextRequest) {
       createdAt: Date.now(),
     });
 
-    revalidateTag("comments", "");
-    revalidateTag(`comments-feed-${feedId}`, "");
+    revalidateTag("comments", "max");
+    revalidateTag(`comments-feed-${feedId}`, "max");
     revalidatePath(`/feeds/${feedSlug}`);
 
     return NextResponse.json(normalizeComment(created.toObject()), {

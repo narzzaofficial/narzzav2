@@ -77,7 +77,11 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     if (input.popularScore !== undefined) update.popularScore = input.popularScore;
     if (input.isActive !== undefined) update.isActive = Boolean(input.isActive);
 
-    const item = await AgreeAppModel.findByIdAndUpdate(objectId, { $set: update }, { new: true, lean: true });
+    const item = await AgreeAppModel.findByIdAndUpdate(
+      objectId,
+      { $set: update },
+      { returnDocument: "after", lean: true }
+    );
     if (!item) return NextResponse.json({ error: "App not found" }, { status: 404 });
 
     revalidateAgreeCaches();

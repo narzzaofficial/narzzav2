@@ -76,7 +76,8 @@ export async function POST(req: NextRequest) {
       return validationErrorResponse({ message: "Missing required fields" });
     }
 
-    const nextId = await getNextSequence("storyId");
+    const maxStory = await StoryModel.findOne({}).sort({ id: -1 }).select("id").lean();
+    const nextId = await getNextSequence("storyId", maxStory?.id ?? 0);
     const name = String(body.name).trim();
     const label = String(body.label || name.slice(0, 2).toUpperCase()).trim();
 

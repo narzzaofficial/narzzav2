@@ -127,7 +127,8 @@ export async function POST(req: NextRequest) {
     if (!FEED_CATEGORIES.includes(body.category)) {
       return validationErrorResponse({ message: "Invalid category" });
     }
-    const nextId = await getNextSequence("feedId");
+    const maxFeed = await FeedModel.findOne({}).sort({ id: -1 }).select("id").lean();
+    const nextId = await getNextSequence("feedId", maxFeed?.id ?? 0);
     const slug = slugify(body.title, nextId);
 
     const newFeed = await FeedModel.create({

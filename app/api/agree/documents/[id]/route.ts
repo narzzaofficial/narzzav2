@@ -78,7 +78,11 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     if (input.content !== undefined) update.content = input.content;
     if (input.isActive !== undefined) update.isActive = Boolean(input.isActive);
 
-    const item = await AgreeDocumentModel.findByIdAndUpdate(objectId, { $set: update }, { new: true, lean: true });
+    const item = await AgreeDocumentModel.findByIdAndUpdate(
+      objectId,
+      { $set: update },
+      { returnDocument: "after", lean: true }
+    );
     if (!item) return NextResponse.json({ error: "Document not found" }, { status: 404 });
 
     revalidateAgreeCaches();

@@ -76,7 +76,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
             : {}),
         },
       },
-      { new: true, lean: true }
+      { returnDocument: "after", lean: true }
     );
 
     if (!result) {

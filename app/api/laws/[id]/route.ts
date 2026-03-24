@@ -79,7 +79,7 @@ export async function PUT(req: NextRequest, context: RouteContext) {
           ...("storyId" in body ? { storyId: body.storyId ?? null } : {}),
         },
       },
-      { new: true, lean: true }
+      { returnDocument: "after", lean: true }
     );
 
     if (!result) {

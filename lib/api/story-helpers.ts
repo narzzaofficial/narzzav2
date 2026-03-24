@@ -17,7 +17,7 @@ export function storyToJson(doc: IStory): Story {
 }
 
 export function revalidateAllStoryCaches() {
-  revalidateTag("stories", "");
+  revalidateTag("stories", "max");
   revalidatePath("/", "layout");
 }
 

@@ -71,7 +71,11 @@ export async function PUT(req: NextRequest, context: RouteContext) {
     if (input.icon !== undefined) update.icon = normalizeString(input.icon);
     if (input.isActive !== undefined) update.isActive = Boolean(input.isActive);
 
-    const item = await AgreeTopicModel.findByIdAndUpdate(objectId, { $set: update }, { new: true, lean: true });
+    const item = await AgreeTopicModel.findByIdAndUpdate(
+      objectId,
+      { $set: update },
+      { returnDocument: "after", lean: true }
+    );
     if (!item) return NextResponse.json({ error: "Topic not found" }, { status: 404 });
 
     revalidateAgreeCaches();
