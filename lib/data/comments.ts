@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 
 import { connectDB } from "@/lib/mongodb";
@@ -15,18 +16,22 @@ function normalizeComment(doc: IFeedComment & { _id: unknown }): FeedComment {
   };
 }
 
-export const getCommentsByFeedId = unstable_cache(
-  async (feedId: number): Promise<FeedComment[]> => {
-    const conn = await connectDB();
-    if (!conn) return [];
+export const getCommentsByFeedId = cache(async (feedId: number): Promise<FeedComment[]> => {
+  const getByFeedIdCached = unstable_cache(
+    async (): Promise<FeedComment[]> => {
+      const conn = await connectDB();
+      if (!conn) return [];
 
-    const comments = await FeedCommentModel.find({ feedId })
-      .sort({ createdAt: -1 })
-      .limit(80)
-      .lean();
+      const comments = await FeedCommentModel.find({ feedId })
+        .sort({ createdAt: -1 })
+        .limit(80)
+        .lean();
 
-    return comments.map((item) => normalizeComment(item as IFeedComment & { _id: unknown }));
-  },
-  ["comments-by-feed-id"],
-  { revalidate: 120, tags: ["comments"] }
-);
+      return comments.map((item) => normalizeComment(item as IFeedComment & { _id: unknown }));
+    },
+    ["comments-by-feed-id", String(feedId)],
+    { revalidate: 120, tags: ["comments", `comments-feed-${feedId}`] }
+  );
+
+  return getByFeedIdCached();
+});

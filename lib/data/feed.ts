@@ -102,25 +102,27 @@ const getFeedsByCategoryCached = unstable_cache(
   { revalidate: 3600, tags: [FEED_TAG] }
 );
 
-const getFeedBySlugCached = unstable_cache(
-  async (slug: string): Promise<Feed | null> => {
-    const conn = await connectDB();
-    if (!conn) return null;
-
-    const normalizedSlug = slug.trim();
-    if (!normalizedSlug) return null;
-
-    const doc = await FeedModel.findOne({ slug: normalizedSlug }).lean();
-    return doc ? feedToJson(doc as IFeed) : null;
-  },
-  ["feed-by-slug"],
-  { revalidate: 3600, tags: [FEED_TAG] }
-);
-
 export const getLatestByCategory = cache(getLatestByCategoryCached);
 export const searchLatestByCategory = cache(searchLatestByCategoryCached);
 export const getFeedsByCategory = cache(getFeedsByCategoryCached);
-export const getFeedBySlug = cache(getFeedBySlugCached);
+export const getFeedBySlug = cache(async (slug: string): Promise<Feed | null> => {
+  const normalizedSlug = slug.trim();
+  if (!normalizedSlug) return null;
+
+  const getBySlugCached = unstable_cache(
+    async (): Promise<Feed | null> => {
+      const conn = await connectDB();
+      if (!conn) return null;
+
+      const doc = await FeedModel.findOne({ slug: normalizedSlug }).lean();
+      return doc ? feedToJson(doc as IFeed) : null;
+    },
+    ["feed-by-slug", normalizedSlug],
+    { revalidate: 3600, tags: [FEED_TAG, `feed-${normalizedSlug}`] }
+  );
+
+  return getBySlugCached();
+});
 
 export async function getFeedById(id: number): Promise<Feed | null> {
   const conn = await connectDB();

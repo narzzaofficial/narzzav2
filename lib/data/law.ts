@@ -66,24 +66,26 @@ const getLawsByCategoryCached = unstable_cache(
   { revalidate: 3600, tags: [LAW_TAG] }
 );
 
-const getLawBySlugCached = unstable_cache(
-  async (slug: string): Promise<LawDoc | null> => {
-    const conn = await connectDB();
-    if (!conn) return null;
-
-    const normalizedSlug = slug.trim();
-    if (!normalizedSlug) return null;
-
-    const doc = await LawDocModel.findOne({ slug: normalizedSlug }).lean();
-    return doc ? lawToJson(doc as ILawDoc) : null;
-  },
-  ["law-by-slug"],
-  { revalidate: 3600, tags: [LAW_TAG] }
-);
-
 export const getLatestLawsByCategory = cache(getLatestLawsByCategoryCached);
 export const getLawsByCategory = cache(getLawsByCategoryCached);
-export const getLawBySlug = cache(getLawBySlugCached);
+export const getLawBySlug = cache(async (slug: string): Promise<LawDoc | null> => {
+  const normalizedSlug = slug.trim();
+  if (!normalizedSlug) return null;
+
+  const getBySlugCached = unstable_cache(
+    async (): Promise<LawDoc | null> => {
+      const conn = await connectDB();
+      if (!conn) return null;
+
+      const doc = await LawDocModel.findOne({ slug: normalizedSlug }).lean();
+      return doc ? lawToJson(doc as ILawDoc) : null;
+    },
+    ["law-by-slug", normalizedSlug],
+    { revalidate: 3600, tags: [LAW_TAG, `law-${normalizedSlug}`] }
+  );
+
+  return getBySlugCached();
+});
 
 export async function getLawById(id: number): Promise<LawDoc | null> {
   const conn = await connectDB();
