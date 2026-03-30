@@ -1,7 +1,7 @@
 "use client";
 
 import { getRelativeTime } from "@/lib/time-utils";
-import { useEffect, useState } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 
 type RelativeTimeProps = {
   timestamp: number;
@@ -13,20 +13,20 @@ type RelativeTimeProps = {
  * Prevents hydration mismatch by calculating time on client.
  */
 export function RelativeTime({ timestamp, className }: RelativeTimeProps) {
-  const [timeText, setTimeText] = useState<string>(() =>
-    getRelativeTime(timestamp)
+  const subscribe = useCallback((onStoreChange: () => void) => {
+    const interval = setInterval(onStoreChange, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const getSnapshot = useCallback(() => getRelativeTime(timestamp), [timestamp]);
+  const getServerSnapshot = useCallback(() => "", []);
+
+  const timeText = useSyncExternalStore(
+    subscribe,
+    getSnapshot,
+    getServerSnapshot
   );
 
-  useEffect(() => {
-    // Optional: Update every minute for live updates
-    const interval = setInterval(() => {
-      setTimeText(getRelativeTime(timestamp));
-    }, 60000); // Update every 60 seconds
-
-    return () => clearInterval(interval);
-  }, [timestamp]);
-
-  // Return empty on server-side render to avoid hydration mismatch
   if (!timeText) {
     return <span className={className}>&nbsp;</span>;
   }

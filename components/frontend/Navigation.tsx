@@ -105,7 +105,7 @@ export function Navigation() {
                       rounded-[14px] transition-all
                       ${
                         isActive
-                          ? "bg-gradient-to-br from-sky-400 to-blue-500 text-white shadow-[0_12px_24px_-14px_rgba(37,99,235,0.65)]"
+                          ? "bg-linear-to-br from-sky-400 to-blue-500 text-white shadow-[0_12px_24px_-14px_rgba(37,99,235,0.65)]"
                           : "bg-slate-100 text-slate-700 dark:bg-slate-800/90 dark:text-slate-200 group-hover:bg-slate-200 dark:group-hover:bg-slate-700"
                       }
                     `}
