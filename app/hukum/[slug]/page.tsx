@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ScrollText, ShieldCheck } from "lucide-react";
+import { notFound } from "next/navigation";
 
 import { RelativeTime } from "@/components/frontend/RelativeTime";
 import { LawMarkdown } from "@/components/hukum/LawMarkdown";
@@ -67,7 +68,7 @@ export default async function LawDetailPage({ params }: LawDetailPageProps) {
   const law = await getLawBySlug(slug);
 
   if (!law) {
-    return <div>Content not found</div>;
+    notFound();
   }
 
   const articleLd = {

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 import { ReadDetail } from "@/components/reads/read-detail";
 import { getAllFeeds, getFeedBySlug } from "@/lib/feeds";
@@ -63,7 +64,7 @@ export default async function FeedDetailPage({ params }: FeedPageProps) {
   const feed = await getFeedBySlug(slug);
 
   if (!feed) {
-    return <div>Content not found</div>;
+    notFound();
   }
 
   const comments = await getCommentsByFeedId(feed.id);

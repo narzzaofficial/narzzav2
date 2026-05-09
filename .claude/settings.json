@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Xia Xia\\\\Documents\\\\Github\\\\narzzav2\" -Force)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Xia Xia\\\\Documents\\\\Github\\\\narzzav2\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(Get-ChildItem -Path . -Filter \".env*\" -Force)",
+      "Bash(npm list *)",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Xia Xia\\\\Documents\\\\Github\\\\narzzav2\" -Recurse -Filter \"layout.tsx\")",
+      "Bash(Select-Object FullName)",
+      "Bash(xargs sed -i 's/min-h-screen px-3 py-6 md:px-5/px-4 py-6 md:px-6/g; s/flex min-h-screen items-center justify-center/flex min-h-64 items-center justify-center/g')",
+      "Bash(Get-ChildItem -Path \"c:\\\\Users\\\\Xia Xia\\\\Documents\\\\Github\\\\narzzav2\\\\app\" -Depth 0 -Force)"
+    ]
+  }
+}

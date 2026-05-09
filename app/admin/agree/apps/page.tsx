@@ -79,7 +79,7 @@ export default function AgreeAppsPage() {
   if (loading) return null;
 
   return (
-    <div className="min-h-screen px-3 py-6 md:px-5">
+    <div className="px-4 py-6 md:px-6">
       <div className="mx-auto max-w-6xl">
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>

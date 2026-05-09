@@ -62,6 +62,7 @@ const FeedSchema = new Schema<IFeed>(
 // ─── Indexes ──────────────────────────────────────────────────────────────────
 FeedSchema.index({ createdAt: -1 });
 FeedSchema.index({ category: 1, createdAt: -1 });
+FeedSchema.index({ "source.url": 1 }, { sparse: true });
 FeedSchema.index(
   { title: "text", takeaway: "text", "lines.text": "text" },
   {

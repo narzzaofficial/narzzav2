@@ -36,8 +36,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = req.nextUrl;
     const fresh = searchParams.get("fresh") === "1";
     const category = searchParams.get("category");
-    const slug = normalizeSlug(searchParams.get("slug"));
     const rawSlug = searchParams.get("slug");
+    const slug = normalizeSlug(rawSlug);
     const page = parsePositiveInt(searchParams.get("page"), 1);
     const limit = parsePositiveInt(searchParams.get("limit"), 20);
 

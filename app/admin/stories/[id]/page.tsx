@@ -62,7 +62,7 @@ export default function EditStoryPage() {
 
   if (!isValidStoryId) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-64 items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Story tidak ditemukan
@@ -83,7 +83,7 @@ export default function EditStoryPage() {
 
   if (!formData) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-64 items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-slate-500 dark:text-slate-400">
             Story tidak ditemukan
@@ -101,7 +101,7 @@ export default function EditStoryPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-6 md:px-5">
+    <div className="px-4 py-6 md:px-6">
       <div className="mx-auto max-w-4xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Story #{storyId}</h1>

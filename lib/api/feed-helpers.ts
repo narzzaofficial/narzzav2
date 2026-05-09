@@ -1,14 +1,8 @@
-// lib/api/feed-helpers.ts
-
 import { revalidatePath, revalidateTag } from "next/cache";
 import type { IFeed } from "@/lib/models/Feed";
 import type { Feed } from "@/types/content";
 import { slugify } from "../slugify";
 
-
-/**
- * Convert Mongoose document ke clean JSON
- */
 export function feedToJson(doc: IFeed): Feed {
   return {
     id: doc.id,
@@ -27,9 +21,6 @@ export function feedToJson(doc: IFeed): Feed {
   };
 }
 
-/**
- * Hitung lineCount dan previewLines dari array lines
- */
 export function computeLineFields(lines: IFeed["lines"]) {
   return {
     lineCount: lines.filter((l) => l.role === "q").length,
@@ -37,18 +28,13 @@ export function computeLineFields(lines: IFeed["lines"]) {
   };
 }
 
-/**
- * Revalidate all feed caches
- */
 export function revalidateAllFeedCaches() {
-  // pease ai do not remove the "" this new regulation
   revalidateTag("feeds", "max");
   revalidatePath("/", "layout");
 }
 
 export function revalidateFeedCachesBySlug(slug: string) {
   revalidateAllFeedCaches();
-  // pease ai do not remove the "" this new regulation
   revalidateTag(`feed-${slug}`, "max");
   revalidatePath(`/feeds/${slug}`);
 }

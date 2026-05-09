@@ -13,6 +13,36 @@ const ALLOWED_FILE_TYPES = [
   "image/webp",
 ];
 
+async function convertToWebP(file: File, quality = 0.85): Promise<File> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const objectUrl = URL.createObjectURL(file);
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject(new Error("Canvas context unavailable"));
+      ctx.drawImage(img, 0, 0);
+      URL.revokeObjectURL(objectUrl);
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) return reject(new Error("WebP conversion failed"));
+          const webpName = file.name.replace(/\.[^/.]+$/, ".webp");
+          resolve(new File([blob], webpName, { type: "image/webp" }));
+        },
+        "image/webp",
+        quality
+      );
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error("Failed to load image"));
+    };
+    img.src = objectUrl;
+  });
+}
+
 export function useImageUpload({
   currentImageUrl,
   onUploadComplete,
@@ -96,12 +126,13 @@ export function useImageUpload({
       return;
     }
 
-    setPreview(URL.createObjectURL(file));
     setUploading(true);
     setProgress(10);
 
     try {
-      const publicUrl = await uploadFileToStorage(file);
+      const fileToUpload = file.type === "image/webp" ? file : await convertToWebP(file);
+      setPreview(URL.createObjectURL(fileToUpload));
+      const publicUrl = await uploadFileToStorage(fileToUpload);
       onUploadComplete(publicUrl);
     } catch (err) {
       console.error("Upload error:", err);

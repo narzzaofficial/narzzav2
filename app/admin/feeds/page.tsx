@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect, useCallback } from "react";
 import { fetchFeeds, deleteFeed } from "@/lib/services/feed-service";
+import { AutoGenerateButton } from "@/components/admin/AutoGenerateButton";
 import type { Feed } from "@/types/content";
 
 export default function FeedListPage() {
@@ -77,8 +78,8 @@ export default function FeedListPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen px-3 py-6 md:px-5">
-        <div className="mx-auto max-w-7xl flex min-h-100 items-center justify-center">
+      <div className="px-4 py-6 md:px-6">
+        <div className="mx-auto max-w-6xl flex min-h-100 items-center justify-center">
           <div className="text-center">
             <div className="mb-2 text-lg font-medium">Memuat data...</div>
             <div className="text-sm text-slate-500 dark:text-slate-400">Mohon tunggu sebentar</div>
@@ -89,8 +90,8 @@ export default function FeedListPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-6 md:px-5">
-      <div className="mx-auto max-w-7xl">
+    <div className="px-4 py-6 md:px-6">
+      <div className="mx-auto max-w-6xl">
         {/* Header */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
@@ -99,9 +100,12 @@ export default function FeedListPage() {
               Kelola semua konten berita, tutorial, dan riset
             </p>
           </div>
-          <Link href="/admin/feeds/new" className="btn-primary">
-            + Tambah Feed Baru
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <AutoGenerateButton onSuccess={loadFeeds} />
+            <Link href="/admin/feeds/new" className="btn-primary">
+              + Tambah Feed Baru
+            </Link>
+          </div>
         </div>
 
         {/* Flash Message */}

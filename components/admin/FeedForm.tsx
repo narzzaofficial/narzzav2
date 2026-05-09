@@ -10,6 +10,7 @@ import {
   SourceInput,
   ChatLinesSection,
 } from "../form";
+import { AIGeneratePanel } from "./AIGeneratePanel";
 
 export type FeedFormData = {
   title: string;
@@ -69,10 +70,7 @@ export function FeedForm({
         takeaway: json.takeaway || "",
         lines: Array.isArray(json.lines)
           ? json.lines
-          : [
-              { role: "q", text: "" },
-              { role: "a", text: "" },
-            ],
+          : [{ role: "q", text: "" }, { role: "a", text: "" }],
         source: json.source
           ? { title: json.source.title || "", url: json.source.url || "" }
           : undefined,
@@ -82,10 +80,7 @@ export function FeedForm({
       setJsonInput("");
       flash("✅ JSON berhasil diimport ke form");
     } catch (err) {
-      flash(
-        "❌ Format JSON tidak valid: " +
-          (err instanceof Error ? err.message : "Unknown error")
-      );
+      flash("❌ Format JSON tidak valid: " + (err instanceof Error ? err.message : "Unknown error"));
     }
   }
 
@@ -114,9 +109,7 @@ export function FeedForm({
   function updateLineImage(index: number, image: string) {
     setForm((p) => ({
       ...p,
-      lines: p.lines.map((line, i) =>
-        i === index ? { ...line, image } : line
-      ),
+      lines: p.lines.map((line, i) => (i === index ? { ...line, image } : line)),
     }));
   }
 
@@ -129,7 +122,6 @@ export function FeedForm({
     }
   }
 
-  // Prepare story options
   const storyOptions = stories.map((story) => ({
     value: story.id,
     label: `${story.name} (${story.type})`,
@@ -143,7 +135,21 @@ export function FeedForm({
         </div>
       )}
 
-      {/* Import JSON */}
+      <AIGeneratePanel
+        onResult={(data) =>
+          setForm((p) => ({
+            ...p,
+            title: data.title || p.title,
+            lines: data.lines,
+            takeaway: data.takeaway,
+            source: data.sourceUrl
+              ? { title: data.sourceTitle || "", url: data.sourceUrl }
+              : p.source,
+          }))
+        }
+        onFlash={flash}
+      />
+
       {showJsonImport && (
         <>
           <div className="mb-4">
@@ -172,10 +178,7 @@ export function FeedForm({
                   Import ke Form
                 </button>
                 <button
-                  onClick={() => {
-                    setShowImport(false);
-                    setJsonInput("");
-                  }}
+                  onClick={() => { setShowImport(false); setJsonInput(""); }}
                   className="btn-secondary"
                 >
                   Batal
@@ -186,30 +189,24 @@ export function FeedForm({
         </>
       )}
 
-      {/* Form */}
       <div className="glass-panel">
         <div className="grid gap-4 sm:grid-cols-2">
-          {/* Title */}
           <div className="sm:col-span-2">
             <TextInput
-              label="Title"
+              label="Judul"
               value={form.title}
               onChange={(value) => setForm((p) => ({ ...p, title: value }))}
-              placeholder="Title"
+              placeholder="Judul feed"
               required
             />
           </div>
 
-          {/* Category */}
           <div className="sm:col-span-2">
             <SelectInput
-              label="Category"
+              label="Kategori"
               value={form.category}
               onChange={(value) =>
-                setForm((p) => ({
-                  ...p, 
-                  category: value as FeedFormData["category"],
-                }))
+                setForm((p) => ({ ...p, category: value as FeedFormData["category"] }))
               }
               options={[
                 { value: "Berita", label: "Berita" },
@@ -220,23 +217,18 @@ export function FeedForm({
             />
           </div>
 
-          {/* Story Assignment */}
           <div className="sm:col-span-2">
             <SelectInput
               label="Assign ke Story (opsional)"
               value={form.storyId ?? ""}
               onChange={(value) =>
-                setForm((p) => ({
-                  ...p,
-                  storyId: value === "" ? null : Number(value),
-                }))
+                setForm((p) => ({ ...p, storyId: value === "" ? null : Number(value) }))
               }
               options={storyOptions}
               placeholder="— Tidak di-assign —"
             />
           </div>
 
-          {/* Cover Image */}
           <div className="sm:col-span-2">
             <ImageInput
               label="Cover Image"
@@ -246,7 +238,6 @@ export function FeedForm({
             />
           </div>
 
-          {/* Takeaway */}
           <div className="sm:col-span-2">
             <TextArea
               label="Takeaway"
@@ -257,34 +248,20 @@ export function FeedForm({
             />
           </div>
 
-          {/* Source */}
           <div className="sm:col-span-2">
             <SourceInput
               titleValue={form.source?.title || ""}
               urlValue={form.source?.url || ""}
               onTitleChange={(value) =>
-                setForm((p) => ({
-                  ...p,
-                  source: {
-                    title: value,
-                    url: p.source?.url || "",
-                  },
-                }))
+                setForm((p) => ({ ...p, source: { title: value, url: p.source?.url || "" } }))
               }
               onUrlChange={(value) =>
-                setForm((p) => ({
-                  ...p,
-                  source: {
-                    title: p.source?.title || "",
-                    url: value,
-                  },
-                }))
+                setForm((p) => ({ ...p, source: { title: p.source?.title || "", url: value } }))
               }
             />
           </div>
         </div>
 
-        {/* Chat Lines */}
         <ChatLinesSection
           lines={form.lines}
           onAdd={addLine}
@@ -294,13 +271,8 @@ export function FeedForm({
           onUpdateImage={updateLineImage}
         />
 
-        {/* Action Buttons */}
         <div className="mt-6 flex gap-2">
-          <button
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className="btn-primary"
-          >
+          <button onClick={handleSubmit} disabled={isSubmitting} className="btn-primary">
             {isSubmitting ? "Menyimpan..." : submitButtonText}
           </button>
           <button onClick={onCancel} className="btn-secondary">

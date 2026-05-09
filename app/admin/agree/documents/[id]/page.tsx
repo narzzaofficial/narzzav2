@@ -90,7 +90,7 @@ export default function EditAgreeDocumentPage() {
 
   if (!formData) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-64 items-center justify-center">
         <div className="text-center">
           <div className="mb-4 text-slate-500 dark:text-slate-400">Document tidak ditemukan</div>
           <SafeBackButton fallbackHref="/admin/agree/documents" className="btn-secondary">
@@ -102,7 +102,7 @@ export default function EditAgreeDocumentPage() {
   }
 
   return (
-    <div className="min-h-screen px-3 py-6 md:px-5">
+    <div className="px-4 py-6 md:px-6">
       <div className="mx-auto max-w-5xl">
         <div className="mb-4 flex items-center justify-between">
           <h1 className="text-xl font-bold">Edit Document</h1>

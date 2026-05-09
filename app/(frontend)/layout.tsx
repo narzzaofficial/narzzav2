@@ -1,6 +1,7 @@
 "use client";
 
 import AdsPlaceholder from "@/components/frontend/AdsPlaceholder";
+import { AnalyticsTracker } from "@/components/frontend/AnalyticsTracker";
 import { MobileNavDrawer } from "@/components/frontend/MobileNavDrawer";
 import { Navigation } from "@/components/frontend/Navigation";
 import { usePathname } from "next/navigation";
@@ -15,6 +16,7 @@ export default function Layout({ children }: Props) {
 
   return (
     <div className="min-h-screen">
+      <AnalyticsTracker />
       <div className="mx-auto max-w-[1600px] px-4 lg:px-8">
         <div className="relative flex gap-4 py-6 pt-20 lg:gap-8 lg:pt-6 xl:gap-10">
           <aside className="hidden w-[280px] shrink-0 lg:block">
