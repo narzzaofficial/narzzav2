@@ -29,12 +29,12 @@ export function computeLineFields(lines: IFeed["lines"]) {
 }
 
 export function revalidateAllFeedCaches() {
-  revalidateTag("feeds", "max");
+  revalidateTag("feeds", { expire: 0 });
   revalidatePath("/", "layout");
 }
 
 export function revalidateFeedCachesBySlug(slug: string) {
   revalidateAllFeedCaches();
-  revalidateTag(`feed-${slug}`, "max");
-  revalidatePath(`/feeds/${slug}`);
+  revalidateTag(`feed-${slug}`, { expire: 0 });
+  revalidatePath(`/feeds/${slug}`, "layout");
 }

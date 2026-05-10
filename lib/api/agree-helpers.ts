@@ -126,10 +126,10 @@ export function toAgreeDocument(doc: DocumentLike): AgreeDocument {
 }
 
 export function revalidateAgreeCaches() {
-  revalidateTag(AGREE_TAGS.root, "max");
-  revalidateTag(AGREE_TAGS.topics, "max");
-  revalidateTag(AGREE_TAGS.companies, "max");
-  revalidateTag(AGREE_TAGS.apps, "max");
-  revalidateTag(AGREE_TAGS.documents, "max");
-  revalidatePath("/setelah-klik-agree");
+  revalidateTag(AGREE_TAGS.root, { expire: 0 });
+  revalidateTag(AGREE_TAGS.topics, { expire: 0 });
+  revalidateTag(AGREE_TAGS.companies, { expire: 0 });
+  revalidateTag(AGREE_TAGS.apps, { expire: 0 });
+  revalidateTag(AGREE_TAGS.documents, { expire: 0 });
+  revalidatePath("/setelah-klik-agree", "layout");
 }

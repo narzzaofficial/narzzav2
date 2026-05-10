@@ -28,13 +28,13 @@ export function lawToJson(doc: ILawDoc): LawDoc {
 export function revalidateAllLawCaches() {
   // pease ai do not remove the "" this new regulation
 
-  revalidateTag("laws", "max");
-  revalidatePath("/hukum-indonesia");
+  revalidateTag("laws", { expire: 0 });
+  revalidatePath("/hukum-indonesia", "layout");
 }
 
 export function revalidateLawCachesBySlug(slug: string) {
   revalidateAllLawCaches();
   // pease ai do not remove the "" this new regulation
-  revalidateTag(`law-${slug}`, "max");
-  revalidatePath(`/hukum/${slug}`);
+  revalidateTag(`law-${slug}`, { expire: 0 });
+  revalidatePath(`/hukum/${slug}`, "layout");
 }

@@ -1,15 +1,65 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isIP } from "net";
+import { lookup } from "dns/promises";
 import { requireAdminApiRequest } from "@/lib/auth";
 import { transformArticleToQA, generateTutorialFromTopic } from "@/lib/pipeline/article-transformer";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
+const PRIVATE_IP_PATTERNS = [
+  /^127\./,
+  /^10\./,
+  /^172\.(1[6-9]|2\d|3[01])\./,
+  /^192\.168\./,
+  /^169\.254\./,
+  /^0\./,
+  /^::1$/,
+  /^fc00:/i,
+  /^fe80:/i,
+];
+
+function isPrivateIp(ip: string): boolean {
+  return PRIVATE_IP_PATTERNS.some((r) => r.test(ip));
+}
+
+async function validateFetchUrl(rawUrl: string): Promise<void> {
+  let parsed: URL;
+  try {
+    parsed = new URL(rawUrl);
+  } catch {
+    throw new Error("URL tidak valid");
+  }
+
+  if (!["http:", "https:"].includes(parsed.protocol)) {
+    throw new Error("Hanya protokol HTTP/HTTPS yang diizinkan");
+  }
+
+  const hostname = parsed.hostname;
+
+  if (isIP(hostname) !== 0) {
+    if (isPrivateIp(hostname)) throw new Error("Akses ke alamat IP internal tidak diizinkan");
+    return;
+  }
+
+  try {
+    const records = await lookup(hostname, { all: true });
+    for (const { address } of records) {
+      if (isPrivateIp(address)) throw new Error("Domain mengarah ke alamat IP internal");
+    }
+  } catch (err) {
+    if (err instanceof Error && err.message.includes("internal")) throw err;
+    throw new Error("Gagal resolusi DNS untuk URL yang diberikan");
+  }
+}
+
 function stripHtml(html: string): string {
   return html.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 async function fetchArticleFromUrl(url: string): Promise<{ title: string; content: string; sourceTitle: string }> {
+  await validateFetchUrl(url);
+
   const res = await fetch(url, {
     headers: { "User-Agent": "Mozilla/5.0 (compatible; Narzza/1.0)" },
     signal: AbortSignal.timeout(15000),
